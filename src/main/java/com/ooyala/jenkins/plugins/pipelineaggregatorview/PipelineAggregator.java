@@ -41,8 +41,6 @@ public class PipelineAggregator extends View {
 
    private boolean useCondensedTables;
 
-
-
    private String filterRegex;
 
    @DataBoundConstructor
@@ -58,13 +56,10 @@ public class PipelineAggregator extends View {
    protected Object readResolve() {
       if (getBuildsLimit == 0)
          getBuildsLimit = 250;
-
       if (fontSize == 0)
          fontSize = 16;
-
       if (buildHistorySize == 0)
          buildHistorySize = 16;
-
       return this;
    }
 
@@ -155,11 +150,6 @@ public class PipelineAggregator extends View {
       for (Object b : builds) {
          Run build = (Run) b;
          Job job = build.getParent();
-         // Skip Maven modules. They are part of parent Maven project
-         if (job.getClass().getName().equals("hudson.maven.MavenModule"))
-            continue;
-
-         // If filtering is enabled, skip jobs not matching the filter
          if (r != null && !r.matcher(job.getName()).find())
             continue;
 

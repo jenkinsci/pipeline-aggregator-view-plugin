@@ -48,22 +48,19 @@
     </license>
   </licenses>
 
-  <!-- If you want this to appear on the wiki page:
   <developers>
     <developer>
-      <id>bhacker</id>
-      <name>Bob Q. Hacker</name>
-      <email>bhacker@nowhere.net</email>
+      <id>paul8620</id>
+      <name>Paul Horvath</name>
+      <email>paul8620@gmail.com</email>
     </developer>
   </developers>
-  -->
-  <!-- Assuming you want to host on @jenkinsci:
-  <scm>
-    <connection>scm:git:git://github.com/jenkinsci/${project.artifactId}-plugin.git</connection>
-    <developerConnection>scm:git:git@github.com:jenkinsci/${project.artifactId}-plugin.git</developerConnection>
-    <url>http://github.com/jenkinsci/${project.artifactId}-plugin</url>
-  </scm>
-   -->
+
+  <!--<scm>-->
+    <!--<connection>scm:git:git://github.com/jenkinsci/${project.artifactId}-plugin.git</connection>-->
+    <!--<developerConnection>scm:git:git@github.com:jenkinsci/${project.artifactId}-plugin.git</developerConnection>-->
+    <!--<url>http://github.com/jenkinsci/${project.artifactId}-plugin</url>-->
+  <!--</scm>-->
   <repositories>
     <repository>
       <id>repo.jenkins-ci.org</id>
@@ -76,14 +73,4 @@
       <url>https://repo.jenkins-ci.org/public/</url>
     </pluginRepository>
   </pluginRepositories>
-  <!-- If you want to depend on other plugins:
-  <dependencies>
-    <dependency>
-      <groupId>org.jenkins-ci.plugins</groupId>
-      <artifactId>credentials</artifactId>
-      <version>1.9.4</version>
-    </dependency>
-  </dependencies>
-  -->
-
 </project>
