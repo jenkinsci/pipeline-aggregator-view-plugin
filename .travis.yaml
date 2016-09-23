@@ -1,4 +1,0 @@
-language: java
-
-script: mvn versions:set -DnewVersion=env.version
-
