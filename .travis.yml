@@ -1,6 +1,8 @@
 language: java
 
+jdk:
+  - oraclejdk8
 script:
-  - mvn versions:set -DnewVersion=env.version
+  - mvn versions:set -DnewVersion=0.9.$TRAVIS_BUILD_NUMBER
   - mnn clean package
 
