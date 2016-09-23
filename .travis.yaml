@@ -3,5 +3,5 @@ env:
 language: java
 
 mvn versions:set -DnewVersion=env.version
-mvn clean packa
+mvn clean package
 
