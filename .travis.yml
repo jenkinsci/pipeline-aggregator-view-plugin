@@ -1,7 +1,10 @@
 language: java
 jdk:
 - oraclejdk8
+
 script:
+- git config --global user.email "builds@travis-ci.com"
+- git config --global user.name "Travis CI"
 - mvn versions:set -DnewVersion=0.9.$TRAVIS_BUILD_NUMBER
 - mvn clean package
 - mvn scm:tag
