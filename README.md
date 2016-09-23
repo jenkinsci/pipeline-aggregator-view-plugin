@@ -1,2 +1,4 @@
-# aggregatedPipelineView
-Aggregate Pipeline View for jenkins that shows latest builds of pipelines in jenkins togheter with it's jobs
+# Aggregated Pipeline View
+
+The View offers a simple functionality of showing latest pipeline build togheter with their stages. 
+From the view you can navigate back to the build number that was generated.

@@ -31,8 +31,6 @@ import java.util.regex.PatternSyntaxException;
 @ExportedBean
 public class PipelineAggregator extends View {
 
-   private transient int getBuildsLimit;
-
    private String viewName;
 
    private int fontSize;
@@ -54,8 +52,6 @@ public class PipelineAggregator extends View {
    }
 
    protected Object readResolve() {
-      if (getBuildsLimit == 0)
-         getBuildsLimit = 250;
       if (fontSize == 0)
          fontSize = 16;
       if (buildHistorySize == 0)
@@ -143,7 +139,7 @@ public class PipelineAggregator extends View {
    @Exported(name = "builds")
    public Collection<Build> getBuildHistory() {
       List<WorkflowJob> jobs = Jenkins.getInstance().getAllItems(WorkflowJob.class);
-      RunList builds = new RunList(jobs).limit(getBuildsLimit);
+      RunList builds = new RunList(jobs).limit(buildHistorySize);
       ArrayList<Build> l = new ArrayList<Build>();
       Pattern r = filterRegex != null ? Pattern.compile(filterRegex) : null;
 
