@@ -1,8 +1,4 @@
-env:
-  - version = 0.9.TRAVIS_BUILD_NUMBER
 language: java
 
-script:
-  - mvn versions:set -DnewVersion=env.version
-  - mvn clean package
+script: mvn versions:set -DnewVersion=env.version
 
