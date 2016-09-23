@@ -1,0 +1,7 @@
+env:
+  version: 0.9.TRAVIS_BUILD_NUMBER
+language: java
+
+mvn versions:set -DnewVersion=env.version
+mvn clean package
+
