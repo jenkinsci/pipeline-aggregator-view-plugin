@@ -144,7 +144,7 @@ public class PipelineAggregator extends View {
       Pattern r = filterRegex != null ? Pattern.compile(filterRegex) : null;
 
       return (Collection<Build>) builds.stream()
-         .filter(build -> r == null || r.matcher(((Job)((Run)build).getParent()).getName()).find())
+         .filter(build -> r != null || r.matcher(((Job)((Run)build).getParent()).getName()).find())
          .map(build -> builder((Run)build))
          .collect(Collectors.toList());
    }
