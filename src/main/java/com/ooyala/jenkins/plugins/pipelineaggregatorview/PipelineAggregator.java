@@ -23,6 +23,7 @@ import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
+import java.util.stream.Collectors;
 
 /**
  * Created by paul on 20/09/16.
@@ -140,29 +141,28 @@ public class PipelineAggregator extends View {
    public Collection<Build> getBuildHistory() {
       List<WorkflowJob> jobs = Jenkins.getInstance().getAllItems(WorkflowJob.class);
       RunList builds = new RunList(jobs).limit(buildHistorySize);
-      ArrayList<Build> l = new ArrayList<Build>();
       Pattern r = filterRegex != null ? Pattern.compile(filterRegex) : null;
 
-      for (Object b : builds) {
-         Run build = (Run) b;
-         Job job = build.getParent();
-         if (r != null && !r.matcher(job.getName()).find())
-            continue;
+      return (Collection<Build>) builds.stream()
+         .filter(build -> r == null || r.matcher(((Job)((Run)build).getParent()).getName()).find())
+         .map(build -> builder((Run)build))
+         .collect(Collectors.toList());
+   }
 
-         Result result = build.getResult();
-         l.add(new Build(job.getName(),
-            build.getFullDisplayName(),
-            build.getNumber(),
-            build.getStartTimeInMillis(),
-            build.getDuration(),
-            result == null ? "BUILDING" : result.toString()));
-      }
+   private static Build builder(Run build){
+      Job job = build.getParent();
+      Result result = build.getResult();
+      return new Build(job.getName(),
+         build.getFullDisplayName(),
+         build.getNumber(),
+         build.getStartTimeInMillis(),
+         build.getDuration(),
+         result == null ? "BUILDING" : result.toString());
 
-      return l;
    }
 
    @ExportedBean(defaultVisibility = 999)
-   public class Build {
+   public static class Build {
       @Exported
       public String jobName;
       @Exported
