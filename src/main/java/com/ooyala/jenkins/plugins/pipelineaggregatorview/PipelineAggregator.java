@@ -139,12 +139,13 @@ public class PipelineAggregator extends View {
 
    @Exported(name = "builds")
    public Collection<Build> getBuildHistory() {
-      List<WorkflowJob> jobs = Jenkins.getInstance().getAllItems(WorkflowJob.class);
-      RunList builds = new RunList(jobs).limit(buildHistorySize);
       Pattern r = filterRegex != null ? Pattern.compile(filterRegex) : null;
+      List<WorkflowJob> jobs = Jenkins.getInstance().getAllItems(WorkflowJob.class).stream()
+         .filter(job -> r == null || r.matcher(job.getName()).find())
+         .collect(Collectors.toList());
+      RunList builds = new RunList(jobs).limit(buildHistorySize);
 
       return (Collection<Build>) builds.stream()
-         .filter(build -> r != null || r.matcher(((Job)((Run)build).getParent()).getName()).find())
          .map(build -> builder((Run)build))
          .collect(Collectors.toList());
    }
