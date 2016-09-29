@@ -9,7 +9,7 @@ script:
   - git config --global user.name "Travis CI"
   - export GIT_TAG=0.9.$TRAVIS_BUILD_NUMBER
   - git tag $GIT_TAG -a -m "Generated tag from TravisCI for build $TRAVIS_BUILD_NUMBER"
-  - git push -q https://$TAGPERM@github.com/RlonRyan/JBasicX --tags
+  - git push -q --tags
 
 deploy:
   deploy:
