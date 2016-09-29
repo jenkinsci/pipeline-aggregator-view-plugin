@@ -3,10 +3,8 @@ jdk:
 - oraclejdk7
 
 script:
-- mvn versions:set -DnewVersion=0.9.$TRAVIS_BUILD_NUMBER
-- mvn clean package
-
-before_deploy:
+  - mvn versions:set -DnewVersion=0.9.$TRAVIS_BUILD_NUMBER
+  - mvn clean package
   - git config --global user.email "builds@travis-ci.com"
   - git config --global user.name "Travis CI"
   - export GIT_TAG=0.9.$TRAVIS_BUILD_NUMBER
