@@ -1,6 +1,6 @@
 language: java
 jdk:
-- oraclejdk8
+- oraclejdk7
 
 script:
 - mvn versions:set -DnewVersion=0.9.$TRAVIS_BUILD_NUMBER

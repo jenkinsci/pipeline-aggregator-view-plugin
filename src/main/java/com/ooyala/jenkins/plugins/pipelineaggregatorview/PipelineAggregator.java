@@ -23,7 +23,6 @@ import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
-import java.util.stream.Collectors;
 
 /**
  * Created by paul on 20/09/16.
@@ -139,28 +138,27 @@ public class PipelineAggregator extends View {
 
    @Exported(name = "builds")
    public Collection<Build> getBuildHistory() {
-      Pattern r = filterRegex != null ? Pattern.compile(filterRegex) : null;
-      List<WorkflowJob> jobs = Jenkins.getInstance().getAllItems(WorkflowJob.class).stream()
-         .filter(job -> r == null || r.matcher(job.getName()).find())
-         .collect(Collectors.toList());
+      List<WorkflowJob> jobs = Jenkins.getInstance().getAllItems(WorkflowJob.class);
       RunList builds = new RunList(jobs).limit(buildHistorySize);
-
-      return (Collection<Build>) builds.stream()
-         .map(build -> builder((Run)build))
-         .collect(Collectors.toList());
+      ArrayList<Build> l = new ArrayList<Build>();
+      Pattern r = filterRegex != null ? Pattern.compile(filterRegex) : null;
+      for (Object b : builds) {
+         Run build = (Run) b;
+         Job job = build.getParent();
+         // If filtering is enabled, skip jobs not matching the filter
+         if (r != null && !r.matcher(job.getName()).find())
+            continue;
+         Result result = build.getResult();
+         l.add(new Build(job.getName(),
+            build.getFullDisplayName(),
+            build.getNumber(),
+            build.getStartTimeInMillis(),
+            build.getDuration(),
+            result == null ? "BUILDING" : result.toString()));
+      }
+      return l;
    }
 
-   private static Build builder(Run build){
-      Job job = build.getParent();
-      Result result = build.getResult();
-      return new Build(job.getName(),
-         build.getFullDisplayName(),
-         build.getNumber(),
-         build.getStartTimeInMillis(),
-         build.getDuration(),
-         result == null ? "BUILDING" : result.toString());
-
-   }
 
    @ExportedBean(defaultVisibility = 999)
    public static class Build {
