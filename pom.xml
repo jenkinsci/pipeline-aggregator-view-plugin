@@ -40,7 +40,7 @@
 
    <name>Pipeline Aggregator</name>
    <description>Agregates the pipelines on a dashboard like view</description>
-   <url>https://wiki.jenkins-ci.org/display/JENKINS/TODO+Plugin</url>
+   <url>https://wiki.jenkins-ci.org/display/JENKINS/Pipeline+Aggregator+View</url>
 
    <!-- The default licence for Jenkins OSS Plugins is MIT. Substitute for the applicable one if needed. -->
 
@@ -61,8 +61,8 @@
 
    <scm>
       <connection>scm:git:git@github.com:paul8620/aggregated-pipeline-view-plugin.git</connection>
-      <developerConnection>scm:git:git@github.com:paul8620/aggregated-pipeline-view-plugin.git</developerConnection>
-      <url>https://github.com/paul8620/aggregated-pipeline-view-plugin</url>
+      <developerConnection>scm:git:git@github.com:jenkinsci/pipeline-aggregator-view-plugin</developerConnection>
+      <url>https://github.com/jenkinsci/pipeline-aggregator-view-plugin</url>
    </scm>
 
    <build>
