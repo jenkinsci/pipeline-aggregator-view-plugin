@@ -10,7 +10,7 @@
       <relativePath/>
    </parent>
 
-   <groupId>com.ooyala.jenkins.plugins</groupId>
+   <groupId>com.paul8620.jenkins.plugins</groupId>
    <artifactId>pipeline-aggregator-view</artifactId>
    <version>1.0-SNAPSHOT</version>
    <packaging>hpi</packaging>
