@@ -150,6 +150,7 @@ public class PipelineAggregator extends View {
             continue;
          Result result = build.getResult();
          l.add(new Build(job.getName(),
+            build.getUrl(),
             build.getFullDisplayName(),
             build.getNumber(),
             build.getStartTimeInMillis(),
@@ -165,6 +166,8 @@ public class PipelineAggregator extends View {
       @Exported
       public String jobName;
       @Exported
+      public String buildUrl;
+      @Exported
       public String buildName;
       @Exported
       public int number;
@@ -175,8 +178,9 @@ public class PipelineAggregator extends View {
       @Exported
       public String result;
 
-      public Build(String jobName, String buildName, int number, long startTime, long duration, String result) {
+      public Build(String jobName,String buildUrl, String buildName, int number, long startTime, long duration, String result) {
          this.jobName = jobName;
+         this.buildUrl=buildUrl;
          this.buildName = buildName;
          this.number = number;
          this.startTime = startTime;

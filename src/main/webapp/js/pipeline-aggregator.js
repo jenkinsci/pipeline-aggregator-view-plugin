@@ -33,7 +33,7 @@ function format_interval(iv) {
 
 
 function reload_jenkins_build_history(tableSelector, viewUrl, buildHistorySize) {
-   $.getJSON(viewUrl + '/api/json', function (data) {
+   $.getJSON(viewUrl + 'api/json', function (data) {
       // Remove all existing rows
       $(tableSelector + ' tbody').find('tr').remove();
       i = 0;
@@ -45,10 +45,11 @@ function reload_jenkins_build_history(tableSelector, viewUrl, buildHistorySize) 
          dt = new Date(val.startTime + val.duration);
          authors='<ul>';
          buildName = val.buildName.replace(/(.*) #.*/, '$1');
+         url = val.buildUrl;
          bame = '<a role="button" href="'+jenkinsUrl+'/job/'+buildName+'/'+val.number+'/" class="btn">'+buildName+'</a>';
          stages = '<div class="btn-group" role="group">'
-         $.getJSON(jenkinsUrl + '/job/' + val.buildName.replace(/(.*) #.*/, '$1') +'/'+val.number+"/wfapi//describe", function (data) {
-               if ( data.stages.length > 0) {
+         $.getJSON(url+"wfapi/describe", function (data) {
+               if (typeof data.stages !== 'undefined' && data.stages.length > 0) {
                   authors='<ul class="list-unstyled">';
                   if(typeof data._links.changesets !== 'undefined' )
                   {
