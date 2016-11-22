@@ -31,7 +31,6 @@ function format_interval(iv) {
    return ivStr;
 }
 
-
 function reload_jenkins_build_history(tableSelector, viewUrl, buildHistorySize) {
    $.getJSON(viewUrl + 'api/json', function (data) {
       // Remove all existing rows
@@ -43,56 +42,56 @@ function reload_jenkins_build_history(tableSelector, viewUrl, buildHistorySize) 
             return;
          }
          dt = new Date(val.startTime + val.duration);
-         authors='<ul>';
+         authors = '<div class="marqueeClass" >'
+            + '<marquee direction="up" scrollamount="2">'
          buildName = val.buildName.replace(/(.*) #.*/, '$1');
          url = val.buildUrl;
-         bame = '<a role="button" href="'+jenkinsUrl+'/job/'+buildName+'/'+val.number+'/" class="btn">'+buildName+'</a>';
+         bame = '<a role="button" href="' + url + '" class="btn">' + buildName + '</a>';
          stages = '<div class="btn-group" role="group">'
-         $.getJSON(url+"wfapi/describe", function (data) {
-               if (typeof data.stages !== 'undefined' && data.stages.length > 0) {
-                  authors='<ul class="list-unstyled">';
-                  if(typeof data._links.changesets !== 'undefined' )
-                  {
-                     $.getJSON(jenkinsUrl+data._links.changesets.href.replace('jenkins',''),function(data){
-                        for(change in data){
-                           for(commit in data[change].commits){
-                              text = '<strong>'+data[change].commits[commit].authorJenkinsId+'</strong> '+data[change].commits[commit].message;
-                              authors+='<li class="small">'+text+'</li>';
-                           }
+         $.getJSON(url + "wfapi/describe", function (data) {
+            if (typeof data.stages !== 'undefined' && data.stages.length > 0) {
+               if (typeof data._links.changesets !== 'undefined') {
+                  $.getJSON(jenkinsUrl + data._links.changesets.href.replace('jenkins', ''), function (data) {
+                     for (change in data) {
+                        for (commit in data[change].commits) {
+                           text = '<strong>' + data[change].commits[commit].authorJenkinsId + '</strong> ' + data[change].commits[commit].message;
+                           authors += text + '</br>';
                         }
-
-                     });
-                  }else {
-                     authors+='<li class="small">No Changes</li>'
-                  }
-                  authors+='</ul>';
-                  for (stage in data.stages) {
-                     switch (data.stages[stage].status) {
-                        case 'SUCCESS':
-                           classes = 'btn-success';
-                           tableClass='sucess'
-                           break;
-                        case 'FAILED':
-                           classes='btn-danger'
-                           break;
-                        case 'ABORTED':
-                           classes = 'btn-warning';
-                           tableClass='warning'
-                        case 'UNSTABLE':
-                           classes = 'btn-warning';
-                           tableClass='danger'
-                           break;
-                        case 'IN_PROGRESS':
-                           classes = 'info invert-text-color';
-                           tableClass='info'
-                           break;
-                        default:
-                           classes = '';
                      }
 
-                     stages += '<button type="button" class="btn ' + classes + '">' + data.stages[stage].name + '</button>';
-                  }
+                  });
+               } else {
+                  authors += 'No Changes'
                }
+               authors += '</marquee>'
+                  + '</div>';
+               for (stage in data.stages) {
+                  switch (data.stages[stage].status) {
+                     case 'SUCCESS':
+                        classes = 'btn-success';
+                        tableClass = 'sucess'
+                        break;
+                     case 'FAILED':
+                        classes = 'btn-danger'
+                        break;
+                     case 'ABORTED':
+                        classes = 'btn-warning';
+                        tableClass = 'warning'
+                     case 'UNSTABLE':
+                        classes = 'btn-warning';
+                        tableClass = 'danger'
+                        break;
+                     case 'IN_PROGRESS':
+                        classes = 'info invert-text-color';
+                        tableClass = 'info'
+                        break;
+                     default:
+                        classes = '';
+                  }
+
+                  stages += '<button type="button" class="btn ' + classes + '">' + data.stages[stage].name + '</button>';
+               }
+            }
             stages += '</div>'
 
             newRow = '<tr><td class="text-left">' + bame + '</td><td class="text-left">'+stages+'</td><td>' +authors+ '</td><td>' + val.number + '</td><td>' + format_date(dt) + '</td><td>' + format_interval(val.duration) + '</td></trcla>';
