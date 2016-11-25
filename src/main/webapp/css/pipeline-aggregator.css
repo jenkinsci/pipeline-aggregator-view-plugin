@@ -80,12 +80,10 @@ a {
 }
 
 marquee{
-  height: 40px;
   overflow: hidden;
 }
 
 .marqueeClass {
-  height: 40px;
   overflow: hidden;
 }
 

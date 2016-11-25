@@ -49,11 +49,9 @@
                 var refreshInterval = 15*1000;
                 var nodeStatuses = [];
                 var buildHistorySize = ${it.buildHistorySize};
-
-                function reload_info (interval) {
-                    reload_jenkins_build_history('#jenkinsBuildHistory', jenkinsUrl + '/${it.url}', buildHistorySize);
-                    setTimeout(function(){ reload_info(interval); }, interval);
-                }
+                var useScrollingCommits= ${it.useScrollingCommits};
+                var rollingCommits = false;
+                    reload_jenkins_build_history('#jenkinsBuildHistory', jenkinsUrl + '/${it.url}', buildHistorySize, useScrollingCommits);
 
                 $$(document).ready(function(){
                     $$.ajaxSetup({ cache: false });

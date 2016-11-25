@@ -39,6 +39,16 @@ public class PipelineAggregator extends View {
 
    private boolean useCondensedTables;
 
+   public boolean isUseScrollingCommits() {
+      return useScrollingCommits;
+   }
+
+   public void setUseScrollingCommits(boolean useScrollingCommits) {
+      this.useScrollingCommits = useScrollingCommits;
+   }
+
+   private boolean useScrollingCommits;
+
    private String filterRegex;
 
    @DataBoundConstructor
@@ -91,6 +101,7 @@ public class PipelineAggregator extends View {
       this.fontSize = json.getInt("fontSize");
       this.buildHistorySize = json.getInt("buildHistorySize");
       this.useCondensedTables = json.getBoolean("useCondensedTables");
+      this.useScrollingCommits= json.getBoolean("useScrollingCommits");
       if (json.get("useRegexFilter") != null) {
          String regexToTest = req.getParameter("filterRegex");
          try {

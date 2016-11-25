@@ -26,12 +26,11 @@ function format_interval(iv) {
       iv = iv - Math.floor(iv / 60000) * 60000;
    }
    // Seconds
-   if (iv > 1000)
-      ivStr += ' ' + Math.floor(iv / 1000) + 's';
+   if (iv > 1000) ivStr += ' ' + Math.floor(iv / 1000) + 's';
    return ivStr;
 }
 
-function reload_jenkins_build_history(tableSelector, viewUrl, buildHistorySize) {
+function reload_jenkins_build_history(tableSelector, viewUrl, buildHistorySize, useScrollingCommits) {
    $.getJSON(viewUrl + 'api/json', function (data) {
       // Remove all existing rows
       $(tableSelector + ' tbody').find('tr').remove();
@@ -42,8 +41,12 @@ function reload_jenkins_build_history(tableSelector, viewUrl, buildHistorySize) 
             return;
          }
          dt = new Date(val.startTime + val.duration);
-         authors = '<div class="marqueeClass" >'
-            + '<marquee direction="up" scrollamount="2">'
+         if (useScrollingCommits) {
+            var height = $('.btn-group').height();
+            authors = '<div class="marqueeClass" style="height:'+height+'" >' + '<marquee direction="up" scrollamount="2">'
+         } else {
+            authors = '<div>'
+         }
          buildName = val.buildName.replace(/(.*) #.*/, '$1');
          url = val.buildUrl;
          bame = '<a role="button" href="' + url + '" class="btn">' + buildName + '</a>';
@@ -51,7 +54,7 @@ function reload_jenkins_build_history(tableSelector, viewUrl, buildHistorySize) 
          $.getJSON(url + "wfapi/describe", function (data) {
             if (typeof data.stages !== 'undefined' && data.stages.length > 0) {
                if (typeof data._links.changesets !== 'undefined') {
-                  $.getJSON(jenkinsUrl + data._links.changesets.href.replace('jenkins', ''), function (data) {
+                  $.getJSON(data._links.changesets.href, function (data) {
                      for (change in data) {
                         for (commit in data[change].commits) {
                            text = '<strong>' + data[change].commits[commit].authorJenkinsId + '</strong> ' + data[change].commits[commit].message;
@@ -63,8 +66,10 @@ function reload_jenkins_build_history(tableSelector, viewUrl, buildHistorySize) 
                } else {
                   authors += 'No Changes'
                }
-               authors += '</marquee>'
-                  + '</div>';
+               if (useScrollingCommits) {
+                  authors += '</marquee>' + '</div>';
+               } else
+                  authors += '</div>'
                for (stage in data.stages) {
                   switch (data.stages[stage].status) {
                      case 'SUCCESS':
@@ -94,7 +99,7 @@ function reload_jenkins_build_history(tableSelector, viewUrl, buildHistorySize) 
             }
             stages += '</div>'
 
-            newRow = '<tr><td class="text-left">' + bame + '</td><td class="text-left">'+stages+'</td><td>' +authors+ '</td><td>' + val.number + '</td><td>' + format_date(dt) + '</td><td>' + format_interval(val.duration) + '</td></trcla>';
+            newRow = '<tr><td class="text-left">' + bame + '</td><td class="text-left">' + stages + '</td><td>' + authors + '</td><td>' + val.number + '</td><td>' + format_date(dt) + '</td><td>' + format_interval(val.duration) + '</td></trcla>';
             $(tableSelector + ' tbody').append(newRow);
          });
 
