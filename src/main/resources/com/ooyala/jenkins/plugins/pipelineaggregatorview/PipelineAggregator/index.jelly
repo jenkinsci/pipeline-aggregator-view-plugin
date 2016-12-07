@@ -53,6 +53,10 @@
                 var rollingCommits = false;
                     reload_jenkins_build_history('#jenkinsBuildHistory', jenkinsUrl + '/${it.url}', buildHistorySize, useScrollingCommits);
 
+                function reload_info (interval) {
+                    reload_jenkins_build_history('#jenkinsBuildHistory', jenkinsUrl + '/${it.url}', buildHistorySize);
+                    setTimeout(function(){ reload_info(interval); }, interval);
+                }
                 $$(document).ready(function(){
                     $$.ajaxSetup({ cache: false });
                     reload_info(refreshInterval);
