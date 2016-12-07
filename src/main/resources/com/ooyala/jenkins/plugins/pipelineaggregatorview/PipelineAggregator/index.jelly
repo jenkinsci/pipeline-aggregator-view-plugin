@@ -51,12 +51,11 @@
                 var buildHistorySize = ${it.buildHistorySize};
                 var useScrollingCommits= ${it.useScrollingCommits};
                 var rollingCommits = false;
-                    reload_jenkins_build_history('#jenkinsBuildHistory', jenkinsUrl + '/${it.url}', buildHistorySize, useScrollingCommits);
-
                 function reload_info (interval) {
                     reload_jenkins_build_history('#jenkinsBuildHistory', jenkinsUrl + '/${it.url}', buildHistorySize, useScrollingCommits);
                     setTimeout(function(){ reload_info(interval); }, interval);
                 }
+
                 $$(document).ready(function(){
                     $$.ajaxSetup({ cache: false });
                     reload_info(refreshInterval);
@@ -64,4 +63,4 @@
             </script>
         </body>
     </html>
-</j:jelly>1
+</j:jelly>
