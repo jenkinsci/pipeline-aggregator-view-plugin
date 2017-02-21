@@ -48,21 +48,17 @@ function reload_jenkins_build_history(tableSelector, viewUrl, buildHistorySize, 
             authors = '<div>'
          }
          buildName = val.buildName.replace(/(.*) #.*/, '$1');
-         url = val.buildUrl;
+         var url = val.url;
          bame = '<a role="button" href="' + url + '" class="btn">' + buildName + '</a>';
          stages = '<div class="btn-group" role="group">'
          $.getJSON(url + "wfapi/describe", function (data) {
             if (typeof data.stages !== 'undefined' && data.stages.length > 0) {
+               var changeSet = val.changeLogSet;
                if (typeof data._links.changesets !== 'undefined') {
-                  $.getJSON(data._links.changesets.href, function (data) {
-                     for (change in data) {
-                        for (commit in data[change].commits) {
-                           text = '<strong>' + data[change].commits[commit].authorJenkinsId + '</strong> ' + data[change].commits[commit].message;
-                           authors += text + '</br>';
-                        }
-                     }
-
-                  });
+                  for (change in changeSet) {
+                     text = '<strong>' + changeSet[change] + '</strong> ' + change;
+                     authors += text ;
+                  }
                } else {
                   authors += 'No Changes'
                }

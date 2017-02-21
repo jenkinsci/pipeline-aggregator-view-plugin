@@ -2,11 +2,13 @@ package com.ooyala.jenkins.plugins.pipelineaggregatorview;
 
 import hudson.Extension;
 import hudson.model.*;
+import hudson.scm.ChangeLogSet;
 import hudson.security.Permission;
 import hudson.util.RunList;
 import jenkins.model.Jenkins;
 import net.sf.json.JSONObject;
 import org.jenkinsci.plugins.workflow.job.WorkflowJob;
+import org.jenkinsci.plugins.workflow.job.WorkflowRun;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.StaplerRequest;
 import org.kohsuke.stapler.StaplerResponse;
@@ -17,10 +19,11 @@ import javax.servlet.ServletException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
@@ -139,7 +142,7 @@ public class PipelineAggregator extends View {
       @Override
       public String getDisplayName() {
          return
-            "PipelineAggregator";
+            "Pipeline Aggregator View";
       }
    }
 
@@ -154,32 +157,33 @@ public class PipelineAggregator extends View {
       ArrayList<Build> l = new ArrayList<Build>();
       Pattern r = filterRegex != null ? Pattern.compile(filterRegex) : null;
       for (Object b : builds) {
-         Run build = (Run) b;
-         Job job = build.getParent();
+         WorkflowRun build = (WorkflowRun) b;
+
+         WorkflowJob job = build.getParent();
          // If filtering is enabled, skip jobs not matching the filter
-         if (r != null && !r.matcher(job.getName()).find())
+         if (r != null && !(r.matcher(job.getName()).find() || r.matcher(job.getParent().getFullName()).find()))
             continue;
+         List<ChangeLogSet<? extends ChangeLogSet.Entry>> changeLogSets = ((WorkflowRun) build).getChangeSets();
          Result result = build.getResult();
          l.add(new Build(job.getName(),
-            build.getUrl(),
             build.getFullDisplayName(),
+            build.getUrl(),
             build.getNumber(),
             build.getStartTimeInMillis(),
             build.getDuration(),
-            result == null ? "BUILDING" : result.toString()));
+            result == null ? "BUILDING" : result.toString(), changeLogSets));
       }
       return l;
    }
-
 
    @ExportedBean(defaultVisibility = 999)
    public static class Build {
       @Exported
       public String jobName;
       @Exported
-      public String buildUrl;
-      @Exported
       public String buildName;
+      @Exported
+      public String url;
       @Exported
       public int number;
       @Exported
@@ -188,16 +192,38 @@ public class PipelineAggregator extends View {
       public long duration;
       @Exported
       public String result;
+      @Exported
+      public Map<String, String> changeLogSet;
 
-      public Build(String jobName,String buildUrl, String buildName, int number, long startTime, long duration, String result) {
+      public Build(String jobName, String buildName, String url, int number, long startTime, long duration, String result, List<ChangeLogSet<? extends ChangeLogSet.Entry>> changeLogSets) {
          this.jobName = jobName;
-         this.buildUrl=buildUrl;
          this.buildName = buildName;
          this.number = number;
          this.startTime = startTime;
          this.duration = duration;
          this.result = result;
+         this.url = url;
+
+         this.changeLogSet = processChanges(changeLogSets);
+      }
+
+      private Map<String, String> processChanges(List<ChangeLogSet<? extends ChangeLogSet.Entry>> changeLogSets) {
+         Map<String, String> changes = new HashMap<>();
+         if (changeLogSets.isEmpty()) {
+            return changes;
+         }
+         for (ChangeLogSet<? extends ChangeLogSet.Entry> set : changeLogSets) {
+            for (Object entry : set.getItems()) {
+               ChangeLogSet.Entry setEntry = (ChangeLogSet.Entry) entry;
+               String author = setEntry.getAuthor().getFullName();
+               String message = setEntry.getMsg();
+               changes.put(message, author);
+            }
+
+         }
+         return changes;
       }
    }
 
 }
+
