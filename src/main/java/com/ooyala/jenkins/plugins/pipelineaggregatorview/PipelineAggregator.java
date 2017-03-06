@@ -161,7 +161,7 @@ public class PipelineAggregator extends View {
 
          WorkflowJob job = build.getParent();
          // If filtering is enabled, skip jobs not matching the filter
-         if (r != null && !(r.matcher(job.getName()).find() || r.matcher(job.getParent().getFullName()).find()))
+         if (r != null && !r.matcher(build.getFullDisplayName()).find())
             continue;
          List<ChangeLogSet<? extends ChangeLogSet.Entry>> changeLogSets = ((WorkflowRun) build).getChangeSets();
          Result result = build.getResult();
