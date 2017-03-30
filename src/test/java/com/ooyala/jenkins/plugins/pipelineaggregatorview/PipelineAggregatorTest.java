@@ -33,23 +33,32 @@ import java.util.regex.Pattern;
  * Created by paul on 2017-03-29.
  */
 @RunWith(PowerMockRunner.class)
-@PrepareForTest(WorkflowRun.class)
+@PrepareForTest({WorkflowRun.class,WorkflowJob.class})
 public class PipelineAggregatorTest {
 
 
    @Test
-   public void regexTest()throws Exception{
-
-      List runList = new ArrayList();
+   public void filterJobsWithOneBuild(){
+      List<WorkflowJob> jobList = new ArrayList();
+      WorkflowJob job = Mockito.mock(WorkflowJob.class);
+      jobList.add(job);
       WorkflowRun run = Mockito.mock(WorkflowRun.class);
-      runList.add(run);
       when(run.getFullDisplayName()).thenReturn("test");
+      when(job.getLastBuild()).thenReturn(run);
       PipelineAggregator pipelineAggregator = new PipelineAggregator("testName","testViewName");
       Pattern p = Pattern.compile("test");
-      List filteredList = pipelineAggregator.filter(runList,p);
+      List filteredList = pipelineAggregator.filterJobs(jobList,p);
       Assert.assertEquals(filteredList.size(),1);
-
-
+   }
+   @Test
+   public void filterJobsWithNoBuilds(){
+      List<WorkflowJob> jobList = new ArrayList();
+      WorkflowJob job = new WorkflowJob(null,"name");
+      jobList.add(job);
+      PipelineAggregator pipelineAggregator = new PipelineAggregator("testName","testViewName");
+      Pattern p = Pattern.compile("test");
+      List filteredList = pipelineAggregator.filterJobs(jobList,p);
+      Assert.assertEquals(filteredList.size(),0);
    }
 
 

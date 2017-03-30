@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
@@ -97,14 +98,13 @@ public class PipelineAggregator extends View {
       return filterRegex;
    }
 
-
    @Override
    protected void submit(StaplerRequest req) throws ServletException, IOException {
       JSONObject json = req.getSubmittedForm();
       this.fontSize = json.getInt("fontSize");
       this.buildHistorySize = json.getInt("buildHistorySize");
       this.useCondensedTables = json.getBoolean("useCondensedTables");
-      this.useScrollingCommits= json.getBoolean("useScrollingCommits");
+      this.useScrollingCommits = json.getBoolean("useScrollingCommits");
       if (json.get("useRegexFilter") != null) {
          String regexToTest = req.getParameter("filterRegex");
          try {
@@ -154,11 +154,12 @@ public class PipelineAggregator extends View {
    public Collection<Build> getBuildHistory() {
       Jenkins jenkins = Jenkins.getInstance();
       List<WorkflowJob> jobs = jenkins.getAllItems(WorkflowJob.class);
-      RunList builds = new RunList(jobs).limit(buildHistorySize);
-      ArrayList<Build> l = new ArrayList<Build>();
       Pattern r = filterRegex != null ? Pattern.compile(filterRegex) : null;
-      List<WorkflowRun> filteredBuilds = filter(builds,r);
-      for (WorkflowRun build : filteredBuilds) {
+      List<WorkflowJob> fJobs = filterJobs(jobs, r);
+      List<Build> l = new ArrayList();
+      RunList<WorkflowRun> builds = new RunList(fJobs).limit(buildHistorySize);
+      for ( WorkflowRun build : builds){
+
          List<ChangeLogSet<? extends ChangeLogSet.Entry>> changeLogSets = ((WorkflowRun) build).getChangeSets();
          Result result = build.getResult();
          l.add(new Build(build.getDisplayName(),
@@ -172,20 +173,21 @@ public class PipelineAggregator extends View {
       return l;
    }
 
-   public List<WorkflowRun> filter(List builds,Pattern r) {
-      List<WorkflowRun> buildList = new ArrayList<>();
-      for(Object b:builds) {
-         WorkflowRun build = (WorkflowRun) b;
-
-         WorkflowJob job = build.getParent();
-         // If filtering is enabled, skip jobs not matching the filter
-         if (r != null &&
-            !r.matcher(build.getFullDisplayName()).find())
-            continue;
-         buildList.add(build);
+   public List<WorkflowJob> filterJobs(List<WorkflowJob> jobs, Pattern r) {
+      for (Iterator<WorkflowJob> iterator = jobs.iterator(); iterator.hasNext(); ) {
+         WorkflowJob job = iterator.next();
+         WorkflowRun run = job.getLastBuild();
+         if (run != null) {
+            if (!r.matcher(run.getFullDisplayName()).find()) {
+               iterator.remove();
+            }
+         } else {
+            iterator.remove();
+         }
       }
-      return buildList;
+      return jobs;
    }
+
 
    @ExportedBean(defaultVisibility = 999)
    public static class Build {
