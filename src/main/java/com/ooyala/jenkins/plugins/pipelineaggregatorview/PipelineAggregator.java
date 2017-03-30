@@ -7,6 +7,7 @@ import hudson.security.Permission;
 import hudson.util.RunList;
 import jenkins.model.Jenkins;
 import net.sf.json.JSONObject;
+import org.jenkinsci.plugins.workflow.graph.FlowNode;
 import org.jenkinsci.plugins.workflow.job.WorkflowJob;
 import org.jenkinsci.plugins.workflow.job.WorkflowRun;
 import org.kohsuke.stapler.DataBoundConstructor;
@@ -159,7 +160,6 @@ public class PipelineAggregator extends View {
       List<Build> l = new ArrayList();
       RunList<WorkflowRun> builds = new RunList(fJobs).limit(buildHistorySize);
       for ( WorkflowRun build : builds){
-
          List<ChangeLogSet<? extends ChangeLogSet.Entry>> changeLogSets = ((WorkflowRun) build).getChangeSets();
          Result result = build.getResult();
          l.add(new Build(build.getDisplayName(),

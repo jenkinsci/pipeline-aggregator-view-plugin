@@ -21,6 +21,7 @@ th, td {
 
 a {
   color: whitesmoke;
+  text-decoration: none !important;
 }
 
 .alert {
@@ -63,6 +64,13 @@ a {
   -webkit-animation: pulse 3s infinite alternate;
   -moz-animation: pulse 3s infinite alternate;
 }
+
+.column-wrap {
+  max-width: 300px;
+  min-width: 200px;
+  padding: 3px 10px 3px 10px !important;
+}
+
 
 @-webkit-keyframes pulse {
   0% {background-color: #45CEEF;}

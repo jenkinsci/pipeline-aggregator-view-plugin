@@ -43,13 +43,16 @@ function reload_jenkins_build_history(tableSelector, viewUrl, buildHistorySize, 
          dt = new Date(val.startTime + val.duration);
          if (useScrollingCommits) {
             var height = $('.btn-group').height();
+            if(height === null){
+               height = '41px';
+            }
             authors = '<div class="marqueeClass" style="height:'+height+'" >' + '<marquee direction="up" scrollamount="2">'
          } else {
             authors = '<div>'
          }
          buildName = val.buildName.replace(/(.*) #.*/, '$1');
          var url = val.url;
-         bame = '<a role="button" href="' + url + '" class="btn">' + buildName + '</a>';
+         bame = '<a href="' + url + '" class="job-title">' + buildName + '</a>';
          stages = '<div class="btn-group" role="group">'
          $.getJSON(url + "wfapi/describe", function (data) {
             if (typeof data.stages !== 'undefined' && data.stages.length > 0) {
@@ -95,7 +98,7 @@ function reload_jenkins_build_history(tableSelector, viewUrl, buildHistorySize, 
             }
             stages += '</div>'
 
-            newRow = '<tr><td class="text-left">' + bame + '</td><td class="text-left">' + stages + '</td><td>' + authors + '</td><td>' + val.number + '</td><td>' + format_date(dt) + '</td><td>' + format_interval(val.duration) + '</td></trcla>';
+            newRow = '<tr><td class="job-wrap text-left">' + bame + '</td><td class="text-left">' + stages + '</td><td>' + authors + '</td><td>' + val.number + '</td><td>' + format_date(dt) + '</td><td>' + format_interval(val.duration) + '</td></trcla>';
             $(tableSelector + ' tbody').append(newRow);
          });
 
