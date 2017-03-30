@@ -56,7 +56,7 @@ function reload_jenkins_build_history(tableSelector, viewUrl, buildHistorySize, 
                var changeSet = val.changeLogSet;
                if (typeof data._links.changesets !== 'undefined') {
                   for (change in changeSet) {
-                     text = '<strong>' + changeSet[change] + '</strong> ' + change;
+                     text = '<strong>' + changeSet[change] + '</strong> ' + change+ '</br>'
                      authors += text ;
                   }
                } else {
