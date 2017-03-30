@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
    <modelVersion>4.0.0</modelVersion>
 
    <parent>
       <groupId>org.jenkins-ci.plugins</groupId>
       <artifactId>plugin</artifactId>
       <version>2.11</version>
-      <relativePath />
+      <relativePath/>
    </parent>
 
    <groupId>com.paul8620.jenkins.plugins</groupId>
@@ -14,16 +15,8 @@
    <version>1.7-SNAPSHOT</version>
    <packaging>hpi</packaging>
 
-   <dependencies>
-      <dependency>
-         <groupId>org.jenkins-ci.plugins.workflow</groupId>
-         <artifactId>workflow-job</artifactId>
-         <version>2.9</version>
-      </dependency>
-   </dependencies>
-
-
    <properties>
+      <powermock.version>1.6.6</powermock.version>
       <!-- Baseline Jenkins version you use to build the plugin. Users must have this version or newer to run. -->
       <jenkins.version>2.32.2</jenkins.version>
       <!-- Java Level to use. Java 7 required when using core >= 1.612 -->
@@ -37,6 +30,39 @@
       -->
       <findbugs.failOnError>false</findbugs.failOnError>
    </properties>
+
+   <dependencies>
+      <dependency>
+         <groupId>org.jenkins-ci.plugins.workflow</groupId>
+         <artifactId>workflow-job</artifactId>
+         <version>2.9</version>
+      </dependency>
+      <dependency>
+         <groupId>junit</groupId>
+         <artifactId>junit</artifactId>
+         <version>4.12</version>
+      </dependency>
+      <dependency>
+         <groupId>org.mockito</groupId>
+         <artifactId>mockito-all</artifactId>
+         <version>1.10.19</version>
+         <scope>test</scope>
+      </dependency>
+      <dependency>
+         <groupId>org.powermock</groupId>
+         <artifactId>powermock-module-junit4</artifactId>
+         <version>${powermock.version}</version>
+         <scope>test</scope>
+      </dependency>
+      <dependency>
+         <groupId>org.powermock</groupId>
+         <artifactId>powermock-api-mockito2</artifactId>
+         <version>${powermock.version}</version>
+         <scope>test</scope>
+      </dependency>
+   </dependencies>
+
+
 
    <name>Pipeline Aggregator</name>
    <description>Agregates the pipelines on a dashboard like view</description>
@@ -63,8 +89,8 @@
       <url>https://github.com/jenkinsci/pipeline-aggregator-view-plugin</url>
       <connection>scm:git:git://github.com:jenkinsci/pipeline-aggregator-view-plugi</connection>
       <developerConnection>scm:git:git@github.com:jenkinsci/pipeline-aggregator-view-plugin</developerConnection>
-     <tag>HEAD</tag>
-  </scm>
+      <tag>HEAD</tag>
+   </scm>
 
    <build>
       <plugins>

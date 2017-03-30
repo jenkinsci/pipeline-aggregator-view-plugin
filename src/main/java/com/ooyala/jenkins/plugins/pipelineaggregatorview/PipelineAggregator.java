@@ -152,20 +152,16 @@ public class PipelineAggregator extends View {
 
    @Exported(name = "builds")
    public Collection<Build> getBuildHistory() {
-      List<WorkflowJob> jobs = Jenkins.getInstance().getAllItems(WorkflowJob.class);
+      Jenkins jenkins = Jenkins.getInstance();
+      List<WorkflowJob> jobs = jenkins.getAllItems(WorkflowJob.class);
       RunList builds = new RunList(jobs).limit(buildHistorySize);
       ArrayList<Build> l = new ArrayList<Build>();
       Pattern r = filterRegex != null ? Pattern.compile(filterRegex) : null;
-      for (Object b : builds) {
-         WorkflowRun build = (WorkflowRun) b;
-
-         WorkflowJob job = build.getParent();
-         // If filtering is enabled, skip jobs not matching the filter
-         if (r != null && !r.matcher(build.getFullDisplayName()).find())
-            continue;
+      List<WorkflowRun> filteredBuilds = filter(builds,r);
+      for (WorkflowRun build : filteredBuilds) {
          List<ChangeLogSet<? extends ChangeLogSet.Entry>> changeLogSets = ((WorkflowRun) build).getChangeSets();
          Result result = build.getResult();
-         l.add(new Build(job.getName(),
+         l.add(new Build(build.getDisplayName(),
             build.getFullDisplayName(),
             build.getUrl(),
             build.getNumber(),
@@ -174,6 +170,21 @@ public class PipelineAggregator extends View {
             result == null ? "BUILDING" : result.toString(), changeLogSets));
       }
       return l;
+   }
+
+   public List<WorkflowRun> filter(List builds,Pattern r) {
+      List<WorkflowRun> buildList = new ArrayList<>();
+      for(Object b:builds) {
+         WorkflowRun build = (WorkflowRun) b;
+
+         WorkflowJob job = build.getParent();
+         // If filtering is enabled, skip jobs not matching the filter
+         if (r != null &&
+            !r.matcher(build.getFullDisplayName()).find())
+            continue;
+         buildList.add(build);
+      }
+      return buildList;
    }
 
    @ExportedBean(defaultVisibility = 999)
