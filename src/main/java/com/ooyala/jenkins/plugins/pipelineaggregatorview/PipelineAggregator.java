@@ -7,7 +7,6 @@ import hudson.security.Permission;
 import hudson.util.RunList;
 import jenkins.model.Jenkins;
 import net.sf.json.JSONObject;
-import org.jenkinsci.plugins.workflow.graph.FlowNode;
 import org.jenkinsci.plugins.workflow.job.WorkflowJob;
 import org.jenkinsci.plugins.workflow.job.WorkflowRun;
 import org.kohsuke.stapler.DataBoundConstructor;
@@ -20,10 +19,8 @@ import javax.servlet.ServletException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
@@ -206,7 +203,7 @@ public class PipelineAggregator extends View {
       @Exported
       public String result;
       @Exported
-      public Map<String, String> changeLogSet;
+      public List<ChangeLog> changeLogSet;
 
       public Build(String jobName, String buildName, String url, int number, long startTime, long duration, String result, List<ChangeLogSet<? extends ChangeLogSet.Entry>> changeLogSets) {
          this.jobName = jobName;
@@ -220,17 +217,14 @@ public class PipelineAggregator extends View {
          this.changeLogSet = processChanges(changeLogSets);
       }
 
-      private Map<String, String> processChanges(List<ChangeLogSet<? extends ChangeLogSet.Entry>> changeLogSets) {
-         Map<String, String> changes = new HashMap<>();
-         if (changeLogSets.isEmpty()) {
-            return changes;
-         }
+      private List<ChangeLog> processChanges(List<ChangeLogSet<? extends ChangeLogSet.Entry>> changeLogSets) {
+         List<ChangeLog> changes = new ArrayList<>();
          for (ChangeLogSet<? extends ChangeLogSet.Entry> set : changeLogSets) {
             for (Object entry : set.getItems()) {
                ChangeLogSet.Entry setEntry = (ChangeLogSet.Entry) entry;
                String author = setEntry.getAuthor().getFullName();
                String message = setEntry.getMsg();
-               changes.put(message, author);
+               changes.add(new ChangeLog(author, message));
             }
 
          }
@@ -238,5 +232,17 @@ public class PipelineAggregator extends View {
       }
    }
 
+   @ExportedBean(defaultVisibility = 999)
+   public static class ChangeLog {
+      @Exported
+      public String author;
+      @Exported
+      public String message;
+
+      public ChangeLog(String author, String message) {
+         this.author = author;
+         this.message = message;
+      }
+   }
 }
 
