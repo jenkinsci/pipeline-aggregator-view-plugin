@@ -171,6 +171,8 @@ public class PipelineAggregator extends View {
    }
 
    public List<WorkflowJob> filterJobs(List<WorkflowJob> jobs, Pattern r) {
+      if(r == null)
+         return jobs;
       for (Iterator<WorkflowJob> iterator = jobs.iterator(); iterator.hasNext(); ) {
          WorkflowJob job = iterator.next();
          WorkflowRun run = job.getLastBuild();
