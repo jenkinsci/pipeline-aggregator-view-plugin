@@ -39,6 +39,7 @@ public class PipelineAggregatorTest {
       List filteredList = pipelineAggregator.filterJobs(jobList,p);
       Assert.assertEquals(filteredList.size(),1);
    }
+
    @Test
    public void filterJobsWithNoBuilds(){
       List<WorkflowJob> jobList = new ArrayList();
@@ -50,5 +51,23 @@ public class PipelineAggregatorTest {
       Assert.assertEquals(filteredList.size(),0);
    }
 
+   @Test
+   public void filterWithNoRegex(){
+      List<WorkflowJob> jobList = new ArrayList();
+      WorkflowJob job = Mockito.mock(WorkflowJob.class);
+      WorkflowJob job1 = Mockito.mock(WorkflowJob.class);
+      jobList.add(job);
+      jobList.add(job1);
+      WorkflowRun run = Mockito.mock(WorkflowRun.class);
+      when(run.getFullDisplayName()).thenReturn("test");
+      WorkflowRun run1 = Mockito.mock(WorkflowRun.class);
+      when(run1.getFullDisplayName()).thenReturn("the job");
+      when(job1.getLastBuild()).thenReturn(run1);
+      PipelineAggregator pipelineAggregator = new PipelineAggregator("testName","testViewName");
+      Pattern p = null;
+      List filteredList = pipelineAggregator.filterJobs(jobList,p);
+      Assert.assertEquals(filteredList.size(),2);
+
+   }
 
 }
