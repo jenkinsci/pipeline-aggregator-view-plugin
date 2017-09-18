@@ -30,7 +30,7 @@ function format_interval(iv) {
    return ivStr;
 }
 
-function reload_jenkins_build_history(tableSelector, viewUrl, buildHistorySize, useScrollingCommits) {
+function reload_jenkins_build_history(tableSelector, viewUrl, buildHistorySize, useScrollingCommits, onlyLastBuild) {
    $.getJSON(viewUrl + 'api/json', function (data) {
       // Remove all existing rows
       $(tableSelector + ' tbody').find('tr').remove();

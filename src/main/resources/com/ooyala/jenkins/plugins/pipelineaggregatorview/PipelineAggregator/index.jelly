@@ -50,9 +50,10 @@
                 var nodeStatuses = [];
                 var buildHistorySize = ${it.buildHistorySize};
                 var useScrollingCommits= ${it.useScrollingCommits};
+                var onlyLastBuild= ${it.onlyLastBuild};
                 var rollingCommits = false;
                 function reload_info (interval) {
-                    reload_jenkins_build_history('#jenkinsBuildHistory', jenkinsUrl + '/${it.url}', buildHistorySize, useScrollingCommits);
+                    reload_jenkins_build_history('#jenkinsBuildHistory', jenkinsUrl + '/${it.url}', buildHistorySize, useScrollingCommits, onlyLastBuild);
                     setTimeout(function(){ reload_info(interval); }, interval);
                 }
 

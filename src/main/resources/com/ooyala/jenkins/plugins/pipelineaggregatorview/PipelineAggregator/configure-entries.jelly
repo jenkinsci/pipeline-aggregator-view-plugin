@@ -20,5 +20,8 @@
         <f:entry title="${%Use auto-rolling commits}">
             <f:checkbox name="useScrollingCommits" field="useScrollingCommits" />
         </f:entry>
+        <f:entry title="${%Only display last build}">
+            <f:checkbox name="onlyLastBuild" field="onlyLastBuild" />
+        </f:entry>
     </f:section>
 </j:jelly>
