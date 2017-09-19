@@ -83,9 +83,9 @@ public class PipelineAggregator extends View {
       return useCondensedTables;
    }
 
-   public int getFontSize() {
-      return fontSize;
-   }
+	public boolean isUseScrollingCommits() {
+		return useScrollingCommits;
+	}
 
 	public void setUseScrollingCommits(boolean useScrollingCommits) {
 		this.useScrollingCommits = useScrollingCommits;
@@ -167,29 +167,26 @@ public class PipelineAggregator extends View {
       Pattern r = filterRegex != null ? Pattern.compile(filterRegex) : null;
       List<WorkflowJob> fJobs = filterJobs(jobs, r);
       List<Build> l = new ArrayList();
-		List<WorkflowRun> wfr = new ArrayList<WorkflowRun>();
-		if( !this.onlyLastBuild ) {
-      RunList<WorkflowRun> builds = new RunList(fJobs).limit(buildHistorySize);
-      for ( WorkflowRun build : builds){
-				wfr.add(build);
-			}
-		} else {
-			for(WorkflowJob job : fJobs) {
-				wfr.add(job.getLastBuild());
-			}
-		}
-		if( wfr != null && wfr.size() > 0 ) {
-			for (WorkflowRun build : wfr) {
-         List<ChangeLogSet<? extends ChangeLogSet.Entry>> changeLogSets = ((WorkflowRun) build).getChangeSets();
-         Result result = build.getResult();
-         l.add(new Build(build.getDisplayName(),
-            build.getFullDisplayName(),
-            build.getUrl(),
-            build.getNumber(),
-            build.getStartTimeInMillis(),
-            build.getDuration(),
-            result == null ? "BUILDING" : result.toString(), changeLogSets));
-      }
+	  List<WorkflowRun> wfr = new ArrayList<WorkflowRun>();
+	  if( !this.onlyLastBuild ) {
+		  RunList<WorkflowRun> builds = new RunList(fJobs).limit(buildHistorySize);
+		  for ( WorkflowRun build : builds){
+			  wfr.add(build);
+		  }
+	  } else {
+		  for(WorkflowJob job : fJobs) {
+			  wfr.add(job.getLastBuild());
+		  }
+	  }
+	  if( wfr != null && wfr.size() > 0 ) {
+		  for (WorkflowRun build : wfr) {
+			  List<ChangeLogSet<? extends ChangeLogSet.Entry>> changeLogSets = ((WorkflowRun) build).getChangeSets();
+			  Result result = build.getResult();
+				l.add(new Build(build.getDisplayName(), build.getFullDisplayName(), build.getUrl(), build.getNumber(),
+						build.getStartTimeInMillis(), build.getDuration(), result == null ? "BUILDING" : result.toString(),
+						changeLogSets));
+		  }
+	  }
       return l;
    }
 
