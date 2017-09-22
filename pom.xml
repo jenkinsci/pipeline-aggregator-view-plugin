@@ -94,9 +94,9 @@
    <build>
       <plugins>
          <plugin>
-            <groupId>org.jvnet.hudson.tools</groupId>
+            <groupId>org.jenkins-ci.tools</groupId>
             <artifactId>maven-hpi-plugin</artifactId>
-            <version>3.0.1</version>
+            <version>2.0</version>
             <extensions>true</extensions>
             <configuration>
                <disabledTestInjection>true</disabledTestInjection>
@@ -104,7 +104,7 @@
          </plugin>
          <plugin>
             <artifactId>maven-scm-plugin</artifactId>
-            <version>1.9</version>
+            <version>1.9.5</version>
             <configuration>
                <tag>${project.artifactId}-${project.version}</tag>
             </configuration>
