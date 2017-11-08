@@ -63,7 +63,7 @@
 
 
 
-   <name>Pipeline Aggregator</name>
+   <name>Pipeline Aggregator View</name>
    <description>Agregates the pipelines on a dashboard like view</description>
    <url>https://wiki.jenkins-ci.org/display/JENKINS/Pipeline+Aggregator+View</url>
 
