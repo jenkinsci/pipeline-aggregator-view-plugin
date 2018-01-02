@@ -22,7 +22,7 @@
         <body class="height100perc">
             <script type="text/javascript">
                 var jenkinsUrl = '${rootURL}';
-                var refreshInterval = 15*1000;
+                var refreshInterval = ${it.refreshInterval}*1000;
                 var nodeStatuses = [];
                 var buildHistorySize = ${it.buildHistorySize};
                 var useScrollingCommits= ${it.useScrollingCommits};

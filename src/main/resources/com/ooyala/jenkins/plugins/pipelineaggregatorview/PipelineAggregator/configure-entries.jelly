@@ -14,6 +14,9 @@
         <f:entry title="${%Records in build history}">
             <f:number name="buildHistorySize" value="${it.buildHistorySize}" />
         </f:entry>
+        <f:entry title="${%Refresh interval}">
+            <f:number name="refreshInterval" value="${it.refreshInterval}" />
+        </f:entry>
         <f:entry title="${%Use condensed tables}">
             <f:checkbox name="useCondensedTables" field="useCondensedTables" />
         </f:entry>

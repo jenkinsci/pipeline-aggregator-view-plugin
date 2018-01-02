@@ -39,6 +39,8 @@ public class PipelineAggregator extends View {
 
    private int buildHistorySize;
 
+   private int refreshInterval;
+
    private boolean useCondensedTables;
    
    private boolean onlyLastBuild;
@@ -58,6 +60,7 @@ public class PipelineAggregator extends View {
       this.viewName = viewName;
       this.fontSize = 16;
       this.buildHistorySize = 16;
+      this.refreshInterval = 15;
       this.useCondensedTables = false;
 	  this.onlyLastBuild = false;
       this.filterRegex = null;
@@ -73,6 +76,8 @@ public class PipelineAggregator extends View {
          fontSize = 16;
       if (buildHistorySize == 0)
          buildHistorySize = 16;
+      if (refreshInterval == 0)
+         refreshInterval = 15;
       return this;
    }
 
@@ -149,11 +154,20 @@ public class PipelineAggregator extends View {
       return filterRegex;
    }
 
+   public int getRefreshInterval() {
+      return refreshInterval;
+   }
+
+   public void setRefreshInterval(int refreshInterval) {
+      this.refreshInterval = refreshInterval;
+   }
+
    @Override
    protected void submit(StaplerRequest req) throws ServletException, IOException {
       JSONObject json = req.getSubmittedForm();
       this.fontSize = json.getInt("fontSize");
       this.buildHistorySize = json.getInt("buildHistorySize");
+      this.refreshInterval = json.getInt("refreshInterval");
       this.useCondensedTables = json.getBoolean("useCondensedTables");
       this.useScrollingCommits = json.getBoolean("useScrollingCommits");
       this.onlyLastBuild = json.getBoolean("onlyLastBuild");
