@@ -32,9 +32,8 @@ function format_interval(iv) {
 
 function reload_jenkins_build_history(tableSelector, viewUrl, buildHistorySize, useScrollingCommits, onlyLastBuild) {
    $.getJSON(viewUrl + 'api/json', function (data) {
-      // Remove all existing rows
-      $(tableSelector + ' tbody').find('tr').remove();
       i = 0;
+      var newRows = [];
       $.each(data.builds, function (key, val) {
          i++;
          if (i > buildHistorySize) {
@@ -99,10 +98,13 @@ function reload_jenkins_build_history(tableSelector, viewUrl, buildHistorySize, 
             stages += '</div>'
 
             newRow = '<tr><td class="job-wrap text-left">' + bame + '</td><td class="text-left">' + stages + '</td><td>' + authors + '</td><td>' + val.number + '</td><td>' + format_date(dt) + '</td><td>' + format_interval(val.duration) + '</td></trcla>';
-            $(tableSelector + ' tbody').append(newRow);
+            newRows.push($(newRow));
          });
-
       });
+	  // Remove all existing rows
+	  $(tableSelector + ' tbody').find('tr').remove();
+	  $(tableSelector + ' tbody').append(newRows);
    });
 }
+
 
