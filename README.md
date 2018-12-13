@@ -4,4 +4,4 @@ The View offers a simple functionality of showing latest pipeline build togheter
 From the view you can navigate back to the build number that was generated.
 
 
-![Fullscreen](./screenshots/AggregatedPipeline.png?raw=true =625x)
+![Fullscreen](./screenshots/AggregatedPipeline.png?raw=true&width=625x)
