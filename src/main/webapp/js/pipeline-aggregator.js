@@ -30,6 +30,10 @@ function format_interval(iv) {
    return ivStr;
 }
 
+function escapeUntrustedHtml(str) {
+    return $('<div>').text(str).html();
+}
+
 function reload_jenkins_build_history(tableSelector, viewUrl, buildHistorySize, useScrollingCommits, onlyLastBuild) {
    $.getJSON(viewUrl + 'api/json', function (data) {
       // Remove all existing rows
@@ -52,14 +56,14 @@ function reload_jenkins_build_history(tableSelector, viewUrl, buildHistorySize, 
          }
          buildName = val.buildName.replace(/(.*) #.*/, '$1');
          var url = val.url;
-         bame = '<a href="' + url + '" class="job-title">' + buildName + '</a>';
+         bame = '<a href="' + url + '" class="job-title">' + escapeUntrustedHtml(buildName) + '</a>';
          stages = '<div class="btn-group" role="group">'
          $.getJSON(url + "wfapi/describe", function (data) {
             if (typeof data.stages !== 'undefined' && data.stages.length > 0) {
                var changeSet = val.changeLogSet;
                if (typeof data._links.changesets !== 'undefined') {
                   for (var i=0; i<changeSet.length; i++) {
-                     text = '<strong>' + changeSet[i].author + '</strong> ' + changeSet[i].message + '</br>'
+                     text = '<strong>' + escapeUntrustedHtml(changeSet[i].author) + '</strong> ' + escapeUntrustedHtml(changeSet[i].message) + '</br>'
                      authors += text ;
                   }
                } else {
@@ -93,7 +97,7 @@ function reload_jenkins_build_history(tableSelector, viewUrl, buildHistorySize, 
                         classes = '';
                   }
 
-                  stages += '<button type="button" class="btn ' + classes + '">' + data.stages[stage].name + '</button>';
+                  stages += '<button type="button" class="btn ' + classes + '">' + escapeUntrustedHtml(data.stages[stage].name) + '</button>';
                }
             }
             stages += '</div>'
