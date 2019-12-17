@@ -11,7 +11,7 @@
 
    <groupId>com.paul8620.jenkins.plugins</groupId>
    <artifactId>pipeline-aggregator-view</artifactId>
-   <version>1.9-SNAPSHOT</version>
+   <version>1.9</version>
    <packaging>hpi</packaging>
 
    <properties>
@@ -88,7 +88,7 @@
       <url>https://github.com/jenkinsci/pipeline-aggregator-view-plugin</url>
       <connection>scm:git:git://github.com:jenkinsci/pipeline-aggregator-view-plugi</connection>
       <developerConnection>scm:git:git@github.com:jenkinsci/pipeline-aggregator-view-plugin</developerConnection>
-      <tag>HEAD</tag>
+      <tag>pipeline-aggregator-view-1.9</tag>
    </scm>
 
    <build>
