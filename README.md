@@ -1,6 +1,7 @@
 # Aggregated Pipeline View
 
-The Aggregated Pipeline View offers a simple functionality of showing the latest pipeline build together with its stages. It allows the users to view the history of their pipelines with stage information (failed/In Progress/Passed) and the changes monitored.
+The Aggregated Pipeline View offers a simple functionality of showing the latest pipeline build together with its stages. 
+It allows the users to view the history of their pipelines with stage information (failed/In Progress/Passed) and the changes monitored.
 
 ![Aggregated Pipeline View](screenshots/AggregatedPipeline.png)
 
