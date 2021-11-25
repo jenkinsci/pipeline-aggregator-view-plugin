@@ -14,6 +14,9 @@
         <f:entry title="${%Records in build history}">
             <f:number name="buildHistorySize" value="${it.buildHistorySize}" />
         </f:entry>
+        <f:entry title="${%Refresh interval}">
+            <f:number name="refreshInterval" value="${it.refreshInterval}" />
+        </f:entry>
         <f:entry title="${%Use condensed tables}">
             <f:checkbox name="useCondensedTables" field="useCondensedTables" />
         </f:entry>
@@ -22,6 +25,20 @@
         </f:entry>
         <f:entry title="${%Only display last build}">
             <f:checkbox name="onlyLastBuild" field="onlyLastBuild" />
+        </f:entry>
+    </f:section>
+    <f:section title="${%Field selection}">
+        <f:entry title="${%Show commit info}">
+            <f:checkbox name="showCommitInfo" field="showCommitInfo" />
+        </f:entry>
+        <f:entry title="${%Show build number}">
+            <f:checkbox name="showBuildNumber" field="showBuildNumber" />
+        </f:entry>
+        <f:entry title="${%Show build time}">
+            <f:checkbox name="showBuildTime" field="showBuildTime" />
+        </f:entry>
+        <f:entry title="${%Show build duration}">
+            <f:checkbox name="showBuildDuration" field="showBuildDuration" />
         </f:entry>
     </f:section>
 </j:jelly>

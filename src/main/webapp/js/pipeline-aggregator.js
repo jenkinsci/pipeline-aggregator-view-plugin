@@ -101,8 +101,26 @@ function reload_jenkins_build_history(tableSelector, viewUrl, buildHistorySize, 
             }
             stages += '</div>'
 
+
+            newRow = '<tr><td class="job-wrap text-left">' + bame + '</td><td class="text-left">' + stages + '</td>';
+            if(showCommitInfo) {
+                newRow += '<td>' + authors + '</td>';
+            }
+            if(showBuildNumber) {
+                newRow += '<td>' + val.number + '</td>';
+            }
+            if(showBuildTime) {
+                newRow += '<td>' + format_date(dt) + '</td>';
+            }
+            if(showBuildDuration) {
+                newRow += '<td>' + format_interval(val.duration) + '</td>';
+            }
+            newRow += '</tr>';
+            $(tableSelector + ' tbody').append(newRow);
+
             newRow = '<tr><td class="job-wrap text-left">' + bame + '</td><td class="text-left">' + stages + '</td><td>' + authors + '</td><td>' + val.number + '</td><td>' + format_date(dt) + '</td><td>' + format_interval(val.duration) + '</td></trcla>';
             newRows.push($(newRow));
+
          });
       });
 	  // Remove all existing rows
@@ -110,5 +128,4 @@ function reload_jenkins_build_history(tableSelector, viewUrl, buildHistorySize, 
 	  $(tableSelector + ' tbody').append(newRows);
    });
 }
-
 

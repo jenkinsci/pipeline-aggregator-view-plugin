@@ -31,6 +31,8 @@ a {
 .btn {
   font-size: 14px;
   background-color: transparent;
+  border-radius: 3px !important;
+  margin: 1px 1px 1px 0 !important;
 }
 
 .btn-success {

@@ -5,6 +5,8 @@ It allows the users to view the history of their pipelines with stage informatio
 
 ![Aggregated Pipeline View](screenshots/AggregatedPipeline.png)
 
+![Fullscreen](./screenshots/AggregatedPipeline.png?raw=true&width=625x)
+
 Releases:
 
 -   1.8 Added the option for showing only the last build of a pipeline
@@ -26,3 +28,4 @@ Releases:
     to be displayed
 -   1.0: initial release a dashboard like view that selects only
     pipelines and presents the stages and the commits on each build.
+

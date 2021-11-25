@@ -39,6 +39,8 @@ public class PipelineAggregator extends View {
 
    private int buildHistorySize;
 
+   private int refreshInterval;
+
    private boolean useCondensedTables;
    
    private boolean onlyLastBuild;
@@ -47,15 +49,26 @@ public class PipelineAggregator extends View {
 
    private String filterRegex;
 
+   private boolean showCommitInfo;
+   private boolean showBuildNumber;
+   private boolean showBuildTime;
+   private boolean showBuildDuration;
+
    @DataBoundConstructor
    public PipelineAggregator(String name, String viewName) {
       super(name);
       this.viewName = viewName;
       this.fontSize = 16;
       this.buildHistorySize = 16;
+      this.refreshInterval = 15;
       this.useCondensedTables = false;
 	  this.onlyLastBuild = false;
       this.filterRegex = null;
+
+      this.showCommitInfo = true;
+      this.showBuildNumber = true;
+      this.showBuildTime = true;
+      this.showBuildDuration = true;
    }
 
    protected Object readResolve() {
@@ -63,6 +76,8 @@ public class PipelineAggregator extends View {
          fontSize = 16;
       if (buildHistorySize == 0)
          buildHistorySize = 16;
+      if (refreshInterval == 0)
+         refreshInterval = 15;
       return this;
    }
 
@@ -82,6 +97,38 @@ public class PipelineAggregator extends View {
    public boolean isUseCondensedTables() {
       return useCondensedTables;
    }
+
+    public boolean isShowCommitInfo() {
+        return showCommitInfo;
+    }
+
+    public void setShowCommitInfo(boolean showCommitInfo) {
+        this.showCommitInfo = showCommitInfo;
+    }
+
+    public boolean isShowBuildNumber() {
+        return showBuildNumber;
+    }
+
+    public void setShowBuildNumber(boolean showBuildNumber) {
+        this.showBuildNumber = showBuildNumber;
+    }
+
+    public boolean isShowBuildTime() {
+        return showBuildTime;
+    }
+
+    public void setShowBuildTime(boolean showBuildTime) {
+        this.showBuildTime = showBuildTime;
+    }
+
+    public boolean isShowBuildDuration() {
+        return showBuildDuration;
+    }
+
+    public void setShowBuildDuration(boolean showBuildDuration) {
+        this.showBuildDuration = showBuildDuration;
+    }
 
 	public boolean isUseScrollingCommits() {
 		return useScrollingCommits;
@@ -107,14 +154,29 @@ public class PipelineAggregator extends View {
       return filterRegex;
    }
 
+   public int getRefreshInterval() {
+      return refreshInterval;
+   }
+
+   public void setRefreshInterval(int refreshInterval) {
+      this.refreshInterval = refreshInterval;
+   }
+
    @Override
    protected void submit(StaplerRequest req) throws ServletException, IOException {
       JSONObject json = req.getSubmittedForm();
       this.fontSize = json.getInt("fontSize");
       this.buildHistorySize = json.getInt("buildHistorySize");
+      this.refreshInterval = json.getInt("refreshInterval");
       this.useCondensedTables = json.getBoolean("useCondensedTables");
       this.useScrollingCommits = json.getBoolean("useScrollingCommits");
-		this.onlyLastBuild = json.getBoolean("onlyLastBuild");
+      this.onlyLastBuild = json.getBoolean("onlyLastBuild");
+
+      this.showCommitInfo = json.getBoolean("showCommitInfo");
+      this.showBuildNumber = json.getBoolean("showBuildNumber");
+      this.showBuildTime = json.getBoolean("showBuildTime");
+      this.showBuildDuration = json.getBoolean("showBuildDuration");
+
       if (json.get("useRegexFilter") != null) {
          String regexToTest = req.getParameter("filterRegex");
          try {
