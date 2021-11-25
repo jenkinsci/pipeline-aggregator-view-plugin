@@ -30,11 +30,14 @@ function format_interval(iv) {
    return ivStr;
 }
 
-function reload_jenkins_build_history(tableSelector, viewUrl, buildHistorySize, useScrollingCommits, onlyLastBuild, showCommitInfo, showBuildNumber, showBuildTime, showBuildDuration) {
+function escapeUntrustedHtml(str) {
+    return $('<div>').text(str).html();
+}
+
+function reload_jenkins_build_history(tableSelector, viewUrl, buildHistorySize, useScrollingCommits, onlyLastBuild) {
    $.getJSON(viewUrl + 'api/json', function (data) {
-      // Remove all existing rows
-      $(tableSelector + ' tbody').find('tr').remove();
       i = 0;
+      var newRows = [];
       $.each(data.builds, function (key, val) {
          i++;
          if (i > buildHistorySize) {
@@ -52,14 +55,14 @@ function reload_jenkins_build_history(tableSelector, viewUrl, buildHistorySize, 
          }
          buildName = val.buildName.replace(/(.*) #.*/, '$1');
          var url = val.url;
-         bame = '<a href="' + url + '" class="job-title">' + buildName + '</a>';
+         bame = '<a href="' + url + '" class="job-title">' + escapeUntrustedHtml(buildName) + '</a>';
          stages = '<div class="btn-group" role="group">'
          $.getJSON(url + "wfapi/describe", function (data) {
             if (typeof data.stages !== 'undefined' && data.stages.length > 0) {
                var changeSet = val.changeLogSet;
                if (typeof data._links.changesets !== 'undefined') {
                   for (var i=0; i<changeSet.length; i++) {
-                     text = '<strong>' + changeSet[i].author + '</strong> ' + changeSet[i].message + '</br>'
+                     text = '<strong>' + escapeUntrustedHtml(changeSet[i].author) + '</strong> ' + escapeUntrustedHtml(changeSet[i].message) + '</br>'
                      authors += text ;
                   }
                } else {
@@ -93,10 +96,11 @@ function reload_jenkins_build_history(tableSelector, viewUrl, buildHistorySize, 
                         classes = '';
                   }
 
-                  stages += '<button type="button" class="btn ' + classes + '">' + data.stages[stage].name + '</button>';
+                  stages += '<button type="button" class="btn ' + classes + '">' + escapeUntrustedHtml(data.stages[stage].name) + '</button>';
                }
             }
             stages += '</div>'
+
 
             newRow = '<tr><td class="job-wrap text-left">' + bame + '</td><td class="text-left">' + stages + '</td>';
             if(showCommitInfo) {
@@ -113,8 +117,15 @@ function reload_jenkins_build_history(tableSelector, viewUrl, buildHistorySize, 
             }
             newRow += '</tr>';
             $(tableSelector + ' tbody').append(newRow);
-         });
 
+            newRow = '<tr><td class="job-wrap text-left">' + bame + '</td><td class="text-left">' + stages + '</td><td>' + authors + '</td><td>' + val.number + '</td><td>' + format_date(dt) + '</td><td>' + format_interval(val.duration) + '</td></trcla>';
+            newRows.push($(newRow));
+
+         });
       });
+	  // Remove all existing rows
+	  $(tableSelector + ' tbody').find('tr').remove();
+	  $(tableSelector + ' tbody').append(newRows);
    });
 }
+

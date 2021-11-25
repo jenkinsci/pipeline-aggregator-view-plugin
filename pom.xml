@@ -11,7 +11,9 @@
 
    <groupId>com.paul8620.jenkins.plugins</groupId>
    <artifactId>pipeline-aggregator-view</artifactId>
+
    <version>1.9.1-SNAPSHOT</version>
+
    <packaging>hpi</packaging>
 
    <properties>
@@ -28,6 +30,7 @@
            ~ stapler-plugin.version: The Stapler Maven plugin version required by the plugin.
       -->
       <findbugs.failOnError>false</findbugs.failOnError>
+      <maven.findbugs.enable>false</maven.findbugs.enable>
    </properties>
 
    <dependencies>
@@ -63,9 +66,9 @@
 
 
 
-   <name>Pipeline Aggregator</name>
+   <name>Pipeline Aggregator View</name>
    <description>Agregates the pipelines on a dashboard like view</description>
-   <url>https://wiki.jenkins-ci.org/display/JENKINS/Pipeline+Aggregator+View</url>
+   <url>github.com/jenkinsci/pipeline-aggregator-view-plugin</url>
 
    <!-- The default licence for Jenkins OSS Plugins is MIT. Substitute for the applicable one if needed. -->
 
