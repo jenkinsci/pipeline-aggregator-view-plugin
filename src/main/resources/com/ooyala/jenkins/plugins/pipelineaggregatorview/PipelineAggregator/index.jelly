@@ -1,4 +1,4 @@
-<j: xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:x="jelly:xml">
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:x="jelly:xml">
     <st:contentType value="text/html;charset=UTF-8" />
     <j:new var="h" className="hudson.Functions"/>
     ${h.initPageVariables(context)}
@@ -20,6 +20,28 @@
             </style>
         </head>
         <body class="height100perc">
+<<<<<<< Updated upstream
+=======
+            <script type="text/javascript">
+                var jenkinsUrl = '${rootURL}';
+                var refreshInterval = ${it.refreshInterval}*1000;
+                var nodeStatuses = [];
+                var buildHistorySize = ${it.buildHistorySize};
+                var useScrollingCommits= ${it.useScrollingCommits};
+                var onlyLastBuild= ${it.onlyLastBuild};
+                var showCommitInfo = ${it.showCommitInfo};
+                var showBuildNumber = ${it.showBuildNumber};
+                var showBuildTime = ${it.showBuildTime};
+                var showBuildDuration = ${it.showBuildDuration};
+                var rollingCommits = false;
+                var url = window.location.href
+                function reload_info (interval) {
+                    reload_jenkins_build_history('#jenkinsBuildHistory',url, buildHistorySize, useScrollingCommits, onlyLastBuild, showCommitInfo, showBuildNumber, showBuildTime, showBuildDuration);
+                    setTimeout(function(){ reload_info(interval); }, interval);
+                }
+            </script>
+
+>>>>>>> Stashed changes
             <a href="${rootURL}/${it.url}configure" alt="Configure view">
                 <div class="abs-top-right">
                     <span class="glyphicon glyphicon-cog"></span>
@@ -64,4 +86,4 @@
             </script>
         </body>
     </html>
-</j:>
+</j:jelly>
