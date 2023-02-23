@@ -11,7 +11,7 @@
 
    <groupId>com.paul8620.jenkins.plugins</groupId>
    <artifactId>pipeline-aggregator-view</artifactId>
-   <version>1.15</version>
+   <version>1.16-SNAPSHOT</version>
    <packaging>hpi</packaging>
 
    <properties>
