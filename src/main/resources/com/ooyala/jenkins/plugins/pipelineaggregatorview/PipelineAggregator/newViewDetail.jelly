@@ -1,3 +1,4 @@
+<?jelly escape-by-default='true'?>
 <div>
     Full screen dashboard that will aggregate the pipelines showing the stages and the commiters
 </div>
