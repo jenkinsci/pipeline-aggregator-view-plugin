@@ -224,7 +224,7 @@ public class PipelineAggregator extends View {
 
    @Exported(name = "builds")
    public Collection<Build> getBuildHistory() {
-      Jenkins jenkins = Jenkins.getInstance();
+      Jenkins jenkins = Jenkins.get();
       List<WorkflowJob> jobs = jenkins.getAllItems(WorkflowJob.class);
       Pattern r = filterRegex != null ? Pattern.compile(filterRegex) : null;
       List<WorkflowJob> fJobs = filterJobs(jobs, r);
