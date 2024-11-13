@@ -5,7 +5,7 @@
    <parent>
       <groupId>org.jenkins-ci.plugins</groupId>
       <artifactId>plugin</artifactId>
-      <version>4.81</version>
+      <version>5.2</version>
       <relativePath />
    </parent>
 
@@ -16,7 +16,8 @@
 
    <properties>
       <changelist>999999-SNAPSHOT</changelist>
-      <jenkins.version>2.459</jenkins.version>
+      <jenkins.baseline>2.479</jenkins.baseline>
+      <jenkins.version>${jenkins.baseline}.1</jenkins.version>
       <gitHubRepo>jenkinsci/${project.artifactId}-plugin</gitHubRepo>
       <!-- TODO fix existing violations -->
       <spotbugs.threshold>High</spotbugs.threshold>
@@ -26,8 +27,8 @@
       <dependencies>
          <dependency>
             <groupId>io.jenkins.tools.bom</groupId>
-            <artifactId>bom-2.452.x</artifactId>
-            <version>3010.vec758b_8e7da_3</version>
+            <artifactId>bom-${jenkins.baseline}.x</artifactId>
+            <version>3654.v237e4a_f2d8da_</version>
             <type>pom</type>
             <scope>import</scope>
          </dependency>
