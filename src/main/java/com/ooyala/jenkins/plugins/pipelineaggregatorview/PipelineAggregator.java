@@ -10,12 +10,12 @@ import net.sf.json.JSONObject;
 import org.jenkinsci.plugins.workflow.job.WorkflowJob;
 import org.jenkinsci.plugins.workflow.job.WorkflowRun;
 import org.kohsuke.stapler.DataBoundConstructor;
-import org.kohsuke.stapler.StaplerRequest;
-import org.kohsuke.stapler.StaplerResponse;
+import org.kohsuke.stapler.StaplerRequest2;
+import org.kohsuke.stapler.StaplerResponse2;
 import org.kohsuke.stapler.export.Exported;
 import org.kohsuke.stapler.export.ExportedBean;
 
-import javax.servlet.ServletException;
+import jakarta.servlet.ServletException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -163,7 +163,7 @@ public class PipelineAggregator extends View {
    }
 
    @Override
-   protected void submit(StaplerRequest req) throws ServletException, IOException {
+   protected void submit(StaplerRequest2 req) throws ServletException, IOException {
       JSONObject json = req.getSubmittedForm();
       this.fontSize = json.getInt("fontSize");
       this.buildHistorySize = json.getInt("buildHistorySize");
@@ -192,7 +192,7 @@ public class PipelineAggregator extends View {
    }
 
    @Override
-   public Item doCreateItem(StaplerRequest req, StaplerResponse rsp) throws IOException, ServletException {
+   public Item doCreateItem(StaplerRequest2 req, StaplerResponse2 rsp) throws IOException, ServletException {
       return Jenkins.getInstance().doCreateItem(req, rsp);
    }
 
