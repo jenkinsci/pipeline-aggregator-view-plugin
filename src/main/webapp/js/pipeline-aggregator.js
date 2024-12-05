@@ -34,7 +34,7 @@ function escapeUntrustedHtml(str) {
     return $('<div>').text(str).html();
 }
 
-function reload_jenkins_build_history(tableSelector, viewUrl, buildHistorySize, useScrollingCommits, onlyLastBuild) {
+function reload_jenkins_build_history(tableSelector, viewUrl, buildHistorySize, useScrollingCommits, onlyLastBuild, showCommitInfo, showBuildNumber, showBuildTime, showBuildDuration) {
    $.getJSON(viewUrl + 'api/json', function (data) {
       i = 0;
       var newRows = [];
@@ -129,3 +129,24 @@ function reload_jenkins_build_history(tableSelector, viewUrl, buildHistorySize, 
    });
 }
 
+document.addEventListener("DOMContentLoaded", () => {
+   const viewData = document.querySelector(".view-data").dataset;
+   const url = window.location.href;
+   const refreshInterval = parseInt(viewData.refreshInterval);
+   const buildHistorySize = parseInt(viewData.buildHistorySize);
+   const useScrollingCommits = viewData.useScrollingCommits === "true";
+   const onlyLastBuild = viewData.onlyLastBuild === "true";
+   const showCommitInfo = viewData.showCommitInfo === "true";
+   const showBuildNumber = viewData.showBuildNumber === "true";
+   const showBuildTime = viewData.showBuildTime === "true";
+   const showBuildDuration = viewData.showBuildDuration === "true";
+
+   window.reload_info = (interval) => {
+      reload_jenkins_build_history('#jenkinsBuildHistory', url, buildHistorySize, useScrollingCommits, onlyLastBuild, showCommitInfo, showBuildNumber, showBuildTime, showBuildDuration);
+      setTimeout(function() { reload_info(interval); }, interval);
+   }
+
+   window.$$ = jQuery;
+   $$.ajaxSetup({ cache: false });
+   reload_info(refreshInterval);
+});

@@ -21,21 +21,10 @@
             </style>
         </head>
         <body class="height100perc">
-            <script type="text/javascript">
-                var url = window.location.href
-                var refreshInterval = ${it.refreshInterval}
-                var buildHistorySize = ${it.buildHistorySize};
-                var useScrollingCommits= ${it.useScrollingCommits};
-                var onlyLastBuild= ${it.onlyLastBuild};
-                var showCommitInfo = ${it.showCommitInfo};
-                var showBuildNumber = ${it.showBuildNumber};
-                var showBuildTime = ${it.showBuildTime};
-                var showBuildDuration = ${it.showBuildDuration};
-                function reload_info (interval) {
-                    reload_jenkins_build_history('#jenkinsBuildHistory', url, buildHistorySize, useScrollingCommits, onlyLastBuild, showCommitInfo, showBuildNumber, showBuildTime, showBuildDuration);
-                    setTimeout(function(){ reload_info(interval); }, interval);
-                }
-            </script>
+            <span class="view-data" data-refresh-interval="${it.refreshInterval}" data-build-history-size="${it.buildHistorySize}"
+                  data-use-scrolling-commits="${it.useScrollingCommits}" data-only-last-build="${it.onlyLastBuild}"
+                  data-show-commit-info="${it.showCommitInfo}" data-show-build-number="${it.showBuildNumber}" data-show-build-time="${it.showBuildTime}"
+                  data-show-build-duration="${it.showBuildDuration}"/>
 
             <a href="${rootURL}/${it.url}configure" alt="Configure view">
                 <div class="abs-top-right">
@@ -50,21 +39,19 @@
                         <!-- VIEW_URL/api/json -->
                         <table id="jenkinsBuildHistory" class="table table-striped table-bordered ${it.tableStyle}">
                             <thead>
-                                <tr><th class="text-left">${%Job}</th><th class="text-left">Stages</th>
-                                <script type="text/javascript">
-                                    if(showCommitInfo) {
-                                        document.write("<th>${%Commits}</th>");
-                                    }
-                                    if(showCommitInfo) {
-                                        document.write("<th>${%Build}</th>");
-                                    }
-                                    if(showBuildTime) {
-                                        document.write("<th>${%Finished}</th>");
-                                    }
-                                    if(showBuildDuration) {
-                                        document.write("<th>${%Duration}</th>");
-                                    }
-                                </script>
+                                <tr>
+                                    <th class="text-left">${%Job}</th>
+                                    <th class="text-left">Stages</th>
+                                    <j:if test="${it.showCommitInfo}">
+                                        <th>${%Commits}</th>
+                                        <th>${%Build}</th>
+                                    </j:if>
+                                    <j:if test="${it.showBuildTime}">
+                                        <th>${%Finished}</th>
+                                    </j:if>
+                                    <j:if test="${it.showBuildDuration}">
+                                        <th>${%Duration}</th>
+                                    </j:if>
                                 </tr>
                             </thead>
                             <tbody></tbody>
@@ -75,13 +62,6 @@
             <script src="${rootURL}/plugin/pipeline-aggregator-view/lib/jquery.min.js"></script>
             <script src="${rootURL}/plugin/pipeline-aggregator-view/lib/bootstrap.min.js"></script>
             <script src="${rootURL}/plugin/pipeline-aggregator-view/js/pipeline-aggregator.js"></script>
-            <script type="text/javascript">
-                var $$ = jQuery;
-                $$(document).ready(function(){
-                    $$.ajaxSetup({ cache: false });
-                    reload_info(refreshInterval);
-                });
-            </script>
         </body>
     </html>
 </j:jelly>
