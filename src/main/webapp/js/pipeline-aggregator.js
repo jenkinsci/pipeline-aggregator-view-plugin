@@ -1,7 +1,7 @@
 function format_date(dt) {
    return dt.getFullYear() + '-' + (dt.getMonth() < 9 ? '0' : '') + (dt.getMonth() + 1) + '-' + (dt.getDate() < 10 ? '0' : '') + dt.getDate() + ' ' + (dt.getHours() < 10 ? '0' : '') + dt.getHours() + ':' + (dt.getMinutes() < 10 ? '0' : '') + dt.getMinutes() + ':' + (dt.getSeconds() < 10 ? '0' : '') + dt.getSeconds();
 }
-$.ajaxSetup({
+jQuery3.ajaxSetup({
    async: false
 });
 function format_interval(iv) {
@@ -31,21 +31,21 @@ function format_interval(iv) {
 }
 
 function escapeUntrustedHtml(str) {
-    return $('<div>').text(str).html();
+    return jQuery3('<div>').text(str).html();
 }
 
 function reload_jenkins_build_history(tableSelector, viewUrl, buildHistorySize, useScrollingCommits, onlyLastBuild, showCommitInfo, showBuildNumber, showBuildTime, showBuildDuration) {
-   $.getJSON(viewUrl + 'api/json', function (data) {
+   jQuery3.getJSON(viewUrl + 'api/json', function (data) {
       i = 0;
       var newRows = [];
-      $.each(data.builds, function (key, val) {
+      jQuery3.each(data.builds, function (key, val) {
          i++;
          if (i > buildHistorySize) {
             return;
          }
          dt = new Date(val.startTime + val.duration);
          if (useScrollingCommits) {
-            var height = $('.btn-group').height();
+            var height = jQuery3('.btn-group').height();
             if(height === null){
                height = '41px';
             }
@@ -57,7 +57,7 @@ function reload_jenkins_build_history(tableSelector, viewUrl, buildHistorySize, 
          var url = val.url;
          bame = '<a href="' + url + '" class="job-title">' + escapeUntrustedHtml(buildName) + '</a>';
          stages = '<div class="btn-group" role="group">'
-         $.getJSON(url + "wfapi/describe", function (data) {
+         jQuery3.getJSON(url + "wfapi/describe", function (data) {
             if (typeof data.stages !== 'undefined' && data.stages.length > 0) {
                var changeSet = val.changeLogSet;
                if (typeof data._links.changesets !== 'undefined') {
@@ -116,16 +116,16 @@ function reload_jenkins_build_history(tableSelector, viewUrl, buildHistorySize, 
                 newRow += '<td>' + format_interval(val.duration) + '</td>';
             }
             newRow += '</tr>';
-            $(tableSelector + ' tbody').append(newRow);
+            jQuery3(tableSelector + ' tbody').append(newRow);
 
             newRow = '<tr><td class="job-wrap text-left">' + bame + '</td><td class="text-left">' + stages + '</td><td>' + authors + '</td><td>' + val.number + '</td><td>' + format_date(dt) + '</td><td>' + format_interval(val.duration) + '</td></trcla>';
-            newRows.push($(newRow));
+            newRows.push(jQuery3(newRow));
 
          });
       });
 	  // Remove all existing rows
-	  $(tableSelector + ' tbody').find('tr').remove();
-	  $(tableSelector + ' tbody').append(newRows);
+	  jQuery3(tableSelector + ' tbody').find('tr').remove();
+	  jQuery3(tableSelector + ' tbody').append(newRows);
    });
 }
 
@@ -146,7 +146,6 @@ document.addEventListener("DOMContentLoaded", () => {
       setTimeout(function() { reload_info(interval); }, interval);
    }
 
-   window.$$ = jQuery;
-   $$.ajaxSetup({ cache: false });
+   jQuery3.ajaxSetup({ cache: false });
    reload_info(refreshInterval);
 });

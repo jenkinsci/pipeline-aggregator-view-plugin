@@ -59,7 +59,7 @@
                     </div>
                 </div>
             </div>
-            <script src="${rootURL}/plugin/pipeline-aggregator-view/lib/jquery.min.js"></script>
+            <st:adjunct includes="io.jenkins.plugins.jquery3"/>
             <script src="${rootURL}/plugin/pipeline-aggregator-view/lib/bootstrap.min.js"></script>
             <script src="${rootURL}/plugin/pipeline-aggregator-view/js/pipeline-aggregator.js"></script>
         </body>
