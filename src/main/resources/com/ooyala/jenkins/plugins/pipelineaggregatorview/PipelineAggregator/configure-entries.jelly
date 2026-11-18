@@ -2,44 +2,44 @@
 <j:jelly xmlns:j="jelly:core" xmlns:f="/lib/form">
     <f:section title="${%Job Filter}">
         <f:optionalBlock name="useRegexFilter" title="${%Use a regular expression to include jobs into the view}"
-                         checked="${it.filterRegex != null}">
-            <f:entry title="${%Regular expression}">
-                <f:textbox name="filterRegex" field="filterRegex" />
+                         checked="${it.filterRegex != null}" inline="true">
+            <f:entry title="${%Regular expression}" field="filterRegex">
+                <f:textbox />
             </f:entry>
         </f:optionalBlock>
     </f:section>
     <f:section title="${%UI Settings}">
-        <f:entry title="${%Font size}">
-            <f:number name="fontSize" value="${it.fontSize}" />
+        <f:entry title="${%Font size}" field="fontSize">
+            <f:number />
         </f:entry>
-        <f:entry title="${%Records in build history}">
-            <f:number name="buildHistorySize" value="${it.buildHistorySize}" />
+        <f:entry title="${%Records in build history}" field="buildHistorySize">
+            <f:number />
         </f:entry>
-        <f:entry title="${%Refresh interval}">
-            <f:number name="refreshInterval" value="${it.refreshInterval}" />
+        <f:entry title="${%Refresh interval}" field="refreshInterval">
+            <f:number />
         </f:entry>
-        <f:entry title="${%Use condensed tables}">
-            <f:checkbox name="useCondensedTables" field="useCondensedTables" />
+        <f:entry title="${%Use condensed tables}" field="useCondensedTables">
+            <f:checkbox />
         </f:entry>
-        <f:entry title="${%Use auto-rolling commits}">
-            <f:checkbox name="useScrollingCommits" field="useScrollingCommits" />
+        <f:entry title="${%Use auto-rolling commits}" field="useScrollingCommits">
+            <f:checkbox />
         </f:entry>
-        <f:entry title="${%Only display last build}">
-            <f:checkbox name="onlyLastBuild" field="onlyLastBuild" />
+        <f:entry title="${%Only display last build}" field="onlyLastBuild">
+            <f:checkbox />
         </f:entry>
     </f:section>
     <f:section title="${%Field selection}">
-        <f:entry title="${%Show commit info}">
-            <f:checkbox name="showCommitInfo" field="showCommitInfo" />
+        <f:entry title="${%Show commit info}" field="showCommitInfo">
+            <f:checkbox />
         </f:entry>
-        <f:entry title="${%Show build number}">
-            <f:checkbox name="showBuildNumber" field="showBuildNumber" />
+        <f:entry title="${%Show build number}" field="showBuildNumber">
+            <f:checkbox />
         </f:entry>
-        <f:entry title="${%Show build time}">
-            <f:checkbox name="showBuildTime" field="showBuildTime" />
+        <f:entry title="${%Show build time}" field="showBuildTime">
+            <f:checkbox />
         </f:entry>
-        <f:entry title="${%Show build duration}">
-            <f:checkbox name="showBuildDuration" field="showBuildDuration" />
+        <f:entry title="${%Show build duration}" field="showBuildDuration">
+            <f:checkbox />
         </f:entry>
     </f:section>
 </j:jelly>
