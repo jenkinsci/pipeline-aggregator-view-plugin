@@ -4,12 +4,15 @@ import hudson.Extension;
 import hudson.model.*;
 import hudson.scm.ChangeLogSet;
 import hudson.security.Permission;
+import hudson.util.FormValidation;
 import hudson.util.RunList;
 import jenkins.model.Jenkins;
 import net.sf.json.JSONObject;
 import org.jenkinsci.plugins.workflow.job.WorkflowJob;
 import org.jenkinsci.plugins.workflow.job.WorkflowRun;
 import org.kohsuke.stapler.DataBoundConstructor;
+import org.kohsuke.stapler.DataBoundSetter;
+import org.kohsuke.stapler.QueryParameter;
 import org.kohsuke.stapler.StaplerRequest2;
 import org.kohsuke.stapler.StaplerResponse2;
 import org.kohsuke.stapler.export.Exported;
@@ -21,10 +24,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
+import org.kohsuke.stapler.interceptor.RequirePOST;
 
 /**
  * Created by paul on 20/09/16.
@@ -35,11 +37,11 @@ public class PipelineAggregator extends View {
 
    private String viewName;
 
-   private int fontSize;
+   private int fontSize = 16;
 
-   private int buildHistorySize;
+   private int buildHistorySize = 16;
 
-   private int refreshInterval;
+   private int refreshInterval = 15;
 
    private boolean useCondensedTables;
    
@@ -49,26 +51,15 @@ public class PipelineAggregator extends View {
 
    private String filterRegex;
 
-   private boolean showCommitInfo;
-   private boolean showBuildNumber;
-   private boolean showBuildTime;
-   private boolean showBuildDuration;
+   private boolean showCommitInfo = true;
+   private boolean showBuildNumber = true;
+   private boolean showBuildTime = true;
+   private boolean showBuildDuration = true;
 
    @DataBoundConstructor
    public PipelineAggregator(String name, String viewName) {
       super(name);
       this.viewName = viewName;
-      this.fontSize = 16;
-      this.buildHistorySize = 16;
-      this.refreshInterval = 15;
-      this.useCondensedTables = false;
-	  this.onlyLastBuild = false;
-      this.filterRegex = null;
-
-      this.showCommitInfo = true;
-      this.showBuildNumber = true;
-      this.showBuildTime = true;
-      this.showBuildDuration = true;
    }
 
    protected Object readResolve() {
@@ -90,18 +81,34 @@ public class PipelineAggregator extends View {
       return fontSize;
    }
 
+    @DataBoundSetter
+    public void setFontSize(int fontSize) {
+       this.fontSize = fontSize;
+    }
+
    public int getBuildHistorySize() {
       return buildHistorySize;
    }
+
+    @DataBoundSetter
+    public void setBuildHistorySize(int buildHistorySize) {
+        this.buildHistorySize = buildHistorySize;
+    }
 
    public boolean isUseCondensedTables() {
       return useCondensedTables;
    }
 
+    @DataBoundSetter
+    public void setUseCondensedTables(boolean useCondensedTables) {
+        this.useCondensedTables = useCondensedTables;
+    }
+
     public boolean isShowCommitInfo() {
         return showCommitInfo;
     }
 
+    @DataBoundSetter
     public void setShowCommitInfo(boolean showCommitInfo) {
         this.showCommitInfo = showCommitInfo;
     }
@@ -110,6 +117,7 @@ public class PipelineAggregator extends View {
         return showBuildNumber;
     }
 
+    @DataBoundSetter
     public void setShowBuildNumber(boolean showBuildNumber) {
         this.showBuildNumber = showBuildNumber;
     }
@@ -118,6 +126,7 @@ public class PipelineAggregator extends View {
         return showBuildTime;
     }
 
+    @DataBoundSetter
     public void setShowBuildTime(boolean showBuildTime) {
         this.showBuildTime = showBuildTime;
     }
@@ -126,6 +135,7 @@ public class PipelineAggregator extends View {
         return showBuildDuration;
     }
 
+    @DataBoundSetter
     public void setShowBuildDuration(boolean showBuildDuration) {
         this.showBuildDuration = showBuildDuration;
     }
@@ -134,6 +144,7 @@ public class PipelineAggregator extends View {
 		return useScrollingCommits;
 	}
 
+  @DataBoundSetter
 	public void setUseScrollingCommits(boolean useScrollingCommits) {
 		this.useScrollingCommits = useScrollingCommits;
 	}
@@ -142,6 +153,7 @@ public class PipelineAggregator extends View {
 		return onlyLastBuild;
 	}
 
+  @DataBoundSetter
 	public void setOnlyLastBuild(boolean onlyLastBuild) {
 		this.onlyLastBuild = onlyLastBuild;
 	}
@@ -154,10 +166,20 @@ public class PipelineAggregator extends View {
       return filterRegex;
    }
 
+   @DataBoundSetter
+   public void setFilterRegex(String filterRegex) throws PatternSyntaxException {
+      if (filterRegex != null) {
+         // validate the regex pattern
+         Pattern.compile(filterRegex);
+      }
+      this.filterRegex = filterRegex;
+   }
+
    public int getRefreshInterval() {
       return refreshInterval;
    }
 
+   @DataBoundSetter
    public void setRefreshInterval(int refreshInterval) {
       this.refreshInterval = refreshInterval;
    }
@@ -165,30 +187,10 @@ public class PipelineAggregator extends View {
    @Override
    protected void submit(StaplerRequest2 req) throws ServletException, IOException {
       JSONObject json = req.getSubmittedForm();
-      this.fontSize = json.getInt("fontSize");
-      this.buildHistorySize = json.getInt("buildHistorySize");
-      this.refreshInterval = json.getInt("refreshInterval");
-      this.useCondensedTables = json.getBoolean("useCondensedTables");
-      this.useScrollingCommits = json.getBoolean("useScrollingCommits");
-      this.onlyLastBuild = json.getBoolean("onlyLastBuild");
-
-      this.showCommitInfo = json.getBoolean("showCommitInfo");
-      this.showBuildNumber = json.getBoolean("showBuildNumber");
-      this.showBuildTime = json.getBoolean("showBuildTime");
-      this.showBuildDuration = json.getBoolean("showBuildDuration");
-
-      if (json.get("useRegexFilter") != null) {
-         String regexToTest = req.getParameter("filterRegex");
-         try {
-            Pattern.compile(regexToTest);
-            this.filterRegex = regexToTest;
-         } catch (PatternSyntaxException x) {
-            Logger.getLogger(ListView.class.getName()).log(Level.WARNING, "Regex filter expression is invalid", x);
-         }
-      } else {
-         this.filterRegex = null;
+      req.bindJSON(this, json);
+      if (!json.has("useRegexFilter") || !json.getBoolean("useRegexFilter")) {
+         setFilterRegex(null);
       }
-      save();
    }
 
    @Override
@@ -215,6 +217,19 @@ public class PipelineAggregator extends View {
       public String getDisplayName() {
          return
             "Pipeline Aggregator View";
+      }
+
+      @RequirePOST
+      public FormValidation doCheckFilterRegex(@QueryParameter String value) {
+         if (value == null || value.isEmpty()) {
+            return FormValidation.ok();
+         }
+         try {
+            Pattern.compile(value);
+            return FormValidation.ok();
+         } catch (PatternSyntaxException e) {
+            return FormValidation.error("Invalid regular expression: " + e.getMessage());
+         }
       }
    }
 

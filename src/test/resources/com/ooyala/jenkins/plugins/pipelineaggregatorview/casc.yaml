@@ -1,0 +1,15 @@
+jenkins:
+  views:
+    - pipelineAggregator:
+        name: "Pipeline Aggregator"
+        fontSize: 20
+        buildHistorySize: 20
+        refreshInterval: 30
+        useCondensedTables: true
+        onlyLastBuild: true
+        useScrollingCommits: true
+        filterRegex: ".*Aggregator.*"
+        showCommitInfo: false
+        showBuildNumber: false
+        showBuildTime: false
+        showBuildDuration: false
